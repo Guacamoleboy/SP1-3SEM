@@ -24,12 +24,8 @@ public class Company {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "user_id,", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
-
-    @OneToMany
-    @JoinColumn(name = "movie_id", referencedColumnName = "id", nullable = false)
-    private Movie movie;
 
     @Column(name = "logo_path", unique = true)
     private String logoPath;
@@ -45,7 +41,8 @@ public class Company {
 
     // __________________________________________________________
 
-    private List<Movie> movieList;
+    @ManyToMany(mappedBy = "companies")
+    private List<Movie> movies;
 
     // __________________________________________________________
     

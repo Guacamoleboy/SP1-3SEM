@@ -20,7 +20,7 @@ public class MovieInfo {
     // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", unique = true, nullable = false)
+    @Column(name = "id")
     private UUID id;
 
     @Column(name = "adult")
@@ -45,14 +45,11 @@ public class MovieInfo {
     @Column(name = "release_date")
     private LocalDate releaseDate;
 
-    @Column(name = "belongs_to_collection")
-    private boolean belongsToCollection;
-
     @Column(name = "budget")
     private Integer budget;
 
-    @Column(name = "imdb_id", unique = true)
-    private String imdbId;
+    @Column(name = "tmdb_id", unique = true, nullable = false)
+    private Long tmdbId;
 
     @Column(name = "run_time")
     private Integer runTime;

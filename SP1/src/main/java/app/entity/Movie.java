@@ -15,19 +15,22 @@ import java.util.List;
 @Table(name="movies")
 public class Movie {
 
+    // Apparently multiple companies own a Movie. Så ManyToMany here.
+
     // Many (Movie) Many (Genre)
     // One (Movie) One (MovieInfo)
     // One (Movie) One (Collection)
     // One (Movie) One (Rating)
+    // Many (Movie) Many (Company)
 
     @Id
     @Column(name ="id", unique = true)
     private Long id;
 
     @ManyToMany
-    @JoinTable(name = "movies_genres",                                                          // New movie table
-        joinColumns = @JoinColumn(name = "movies_id", referencedColumnName = "id"),             // Here
-        inverseJoinColumns = @JoinColumn(name = "genres_id", referencedColumnName = "id")       // There
+    @JoinTable(name = "movies_genres",                                                         // New movie table
+        joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"),             // Here
+        inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id")       // There
     )
     private List<Genre> genre;
 
@@ -35,12 +38,19 @@ public class Movie {
     @JoinColumn(name = "movie_infos_id", referencedColumnName = "id", nullable = false)
     private MovieInfo movieInfo;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "collections_id", referencedColumnName = "id")
     private Collection collection;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ratings_id", referencedColumnName = "id")
     private Rating rating;
+
+    @ManyToMany
+    @JoinTable(name = "movie_companies",
+        joinColumns = @JoinColumn(name = "movie_id"),
+        inverseJoinColumns = @JoinColumn(name = "company_id")
+    )
+    private List<Company> companies;
 
 }
