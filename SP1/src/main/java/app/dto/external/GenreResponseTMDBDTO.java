@@ -5,16 +5,22 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GenreTMDBDTO {
+public class GenreResponseTMDBDTO {
 
-    // Attributes
-    private Long id;
-    private String name;
+    // Endpoint for
+    // ____________
+    // https://api.themoviedb.org/3/genre/movie/list
+    //
+    // Docs:
+    // https://developer.themoviedb.org/reference/genre-movie-list
+
+    private List<GenreTMDBDTO> genres;
 
 }
