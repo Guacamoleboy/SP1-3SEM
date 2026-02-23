@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.List;
-import java.util.UUID;
 
 @Builder
 @Data
@@ -16,11 +15,13 @@ import java.util.UUID;
 @Table(name="collections")
 public class Collection {
 
+    // Object or null. Not boolean as we first thought!
+    // UUID removed and swapped for Long (return from API).
+
     // Attributes
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", unique = true, nullable = false)
-    private UUID id;
+    private Long id;
 
     @ManyToMany
     @JoinTable(name = "collection_genres",                                     // Creating new DB Table
@@ -29,7 +30,16 @@ public class Collection {
     )
     private List<Genre> genres;
 
+    @Column(name = "poster_path")
+    private String posterPath;
+
+    @Column(name = "backdrop_path")
+    private String backdropPath;
+
     @Column(name = "name", unique = true)
     private String name;
+
+    @OneToMany(mappedBy = "collection")
+    private List<Movie> movies;
 
 }
