@@ -19,6 +19,9 @@ public class CollectionTMDBDTO {
     // Endpoint for
     // ____________
     // https://api.themoviedb.org/3/collection/{collection_id}
+    //
+    // Docs:
+    // https://developer.themoviedb.org/reference/collection-details
 
     // Attributes
     private Long id;

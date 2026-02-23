@@ -3,7 +3,7 @@ package app.enums;
 public enum CreditTitleEnum {
 
     // General Crew
-    ACTOR("Actor Description"),
+    //ACTOR("Actor Description"), Cast Entity now
     DIRECTOR("Director Description"),
     SCREENWRITER("Screenwriter - Author of the script and dialogue"),
     PRODUCER("Producer - Oversees the entire production process"),

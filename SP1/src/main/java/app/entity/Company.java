@@ -27,11 +27,23 @@ public class Company {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
-    @Column(name = "logo_path", unique = true)
+    @Column(name = "logo_path")
     private String logoPath;
 
     @Column(name ="name", unique = true)
     private String name;
+
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
+
+    @Column(name = "headquarters")
+    private String headquarters;
+
+    @Column(name = "homepage")
+    private String homepage;
+
+    @Column(name = "parent_company")
+    private String parentCompany;
 
     @Column(name="original_country")
     private String originalCountry;
