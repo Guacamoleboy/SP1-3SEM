@@ -15,19 +15,23 @@ import lombok.NoArgsConstructor;
 @Table(name="crews")
 public class Crew {
 
-    // creditTitle -> Object of CreditTitleEnum. Use getDescription() to get description!
-    // ___________________________
-    //
-    // Usage:
-    // crew.getCreditTitle().getDescription()
+    // Many (Crew) One (Movie)
+    // Not using enum anymore as department does the same from JSON.
+    // Can be used to sort later if needed (enum).
 
-    // Attributes
     @Id
-    @Column(name = "id", unique = true)
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
+    private Integer gender;                       // 1 -> Female | 2 -> Male
+    private String department;
+    private String job;
+    private String name;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "credit_title_enum", nullable = false)
-    private CreditTitleEnum creditTitleEnum;
+    @Column(name = "credit_id")
+    private String creditId;
+
+    @ManyToOne
+    @JoinColumn(name = "movie_id")
+    private Movie movie;
 
 }

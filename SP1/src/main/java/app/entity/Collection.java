@@ -30,6 +30,12 @@ public class Collection {
     )
     private List<Genre> genres;
 
+    @Column(name = "poster_path")
+    private String posterPath;
+
+    @Column(name = "backdrop_path")
+    private String backdropPath;
+
     @Column(name = "name", unique = true)
     private String name;
 
