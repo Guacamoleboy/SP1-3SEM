@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Builder
@@ -53,6 +54,20 @@ public class MovieInfo {
 
     @Column(name = "run_time")
     private Integer runTime;
+
+
+    @ManyToMany
+    @JoinTable(name = "movie_info_crews",                                                         // New movie table
+            joinColumns = @JoinColumn(name = "movie_info_id", referencedColumnName = "id"),       // Here
+            inverseJoinColumns = @JoinColumn(name = "crew_id", referencedColumnName = "id")       // There
+    )
+    List<Crew> crews;
+    @ManyToMany
+    @JoinTable(name = "movie_info_casts",
+            joinColumns = @JoinColumn(name = "movie_info_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "cast_id", referencedColumnName = "id")
+    )
+    List<Cast> casts;
 
     // _________________________________________________________
 

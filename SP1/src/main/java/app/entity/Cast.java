@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Table(name="casts")
 public class Cast {
 
+    // Actor
     // Many (Cast) One (Movie)
 
     // Attributes

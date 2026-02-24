@@ -1,6 +1,5 @@
 package app.entity;
 
-import app.enums.CreditTitleEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +13,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name="crews")
 public class Crew {
+
+    // Crew.. Anything but the actor.
 
     // Many (Crew) One (Movie)
     // Not using enum anymore as department does the same from JSON.
