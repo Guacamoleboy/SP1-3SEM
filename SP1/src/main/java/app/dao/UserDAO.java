@@ -15,5 +15,4 @@ public class UserDAO extends EntityManagerDAO<User> {
 
     // _______________________________________________________________
 
-
 }

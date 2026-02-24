@@ -8,12 +8,13 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.*;
 import org.testcontainers.containers.PostgreSQLContainer;
-
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class EntityManagerDAOTest {
+
+    // Usage reference:
+    // https://github.com/Guacamoleboy/3-Semester-Friday/blob/main/backend/src/test/java/dk/project/dao/EntityManagerDAOTest.java
 
     private static PostgreSQLContainer<?> postgres;
     private static EntityManagerFactory emf;

@@ -19,6 +19,10 @@ public class GenreTMDBService {
     private static final String BASE_LANGUAGE = "&language=en";
 
     // __________________________________________________________
+    // Functionality of Backend (4)
+    // ____________________________
+    //
+    // Store genre for each Movie 
 
     public CompletableFuture<List<GenreTMDBDTO>> getAllGenres() {
 

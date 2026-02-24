@@ -18,6 +18,10 @@ public class CreditsTMDBService {
     private static final String BASE_LANGUAGE = "&language=en-US";
 
     // __________________________________________________________
+    // Functionality of Backend (3)
+    // ___________________________
+    //
+    // Fetch Crew & Cast from A specific movieId and store in DB
 
     public CompletableFuture<MovieCreditsTMDBDTO> getCreditsByMovieId(Long movieId) {
 

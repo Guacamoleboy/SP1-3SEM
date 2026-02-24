@@ -1,15 +1,29 @@
 package app.dto;
 
-
-import lombok.Getter;
-import lombok.Setter;
-
+import app.entity.Company;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
+import app.entity.Role;
+import java.time.LocalDateTime;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDTO {
+
+    // Feedback to Frontend (UI)
+
+    // Attributes
     private UUID id;
     private String username;
-    private String email;
+    private Role role;
+    private Company company;
+    @JsonProperty("last_login")
+    private LocalDateTime lastLogin;
+
 }
