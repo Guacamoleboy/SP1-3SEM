@@ -17,6 +17,10 @@ public class RoleService extends EntityManagerService<Role> {
         this.RoleDAO = (RoleDAO) this.entityManagerDAO;
     }
 
+    // _________________________________________________________
 
+    public Role findRoleByName(String roleName) {
+        return findEntityByColumn(roleName, "roleEnum");
+    }
 
 }

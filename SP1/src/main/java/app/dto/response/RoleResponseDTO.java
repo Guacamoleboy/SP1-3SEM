@@ -9,7 +9,7 @@ public class RoleResponseDTO {
 
     // Outbound
 
-    // Output JSON format:
+    // Expected JSON format from backend:
     // ___________________
     //
     //      {
@@ -38,7 +38,7 @@ public class RoleResponseDTO {
 
     // Usage in Service:
     // ______
-    // RoleResponseDTO r = new RoleResponseDTO(RoleEnum.ADMIN);
+    // RoleResponseDTO roleResponseDTO = new RoleResponseDTO(RoleEnum.ADMIN);
 
     // ____________________________________________________________
 
