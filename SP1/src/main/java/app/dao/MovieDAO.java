@@ -15,14 +15,20 @@ public class MovieDAO extends EntityManagerDAO<Movie> {
     public MovieDAO(EntityManager em) {
         super(em, Movie.class);
     }
+
     // _______________________________________________________________
     // Fuctionality of Backend (5)
     // __________________________
 
     public void addMove(Movie movie) {
-        //TODO: Make the functionality of adding a movie to the database!!!
-    }
 
+        // TODO: (OLIVER)
+        // TODO: Make the functionality of adding a movie to the database!!!
+
+        // TODO: (JONAS) - (24/02-2026)
+        // TODO: Allerede lavet. Brug CRUD metoden create() fra EntityManagerDAO vel?
+
+    }
 
     // _______________________________________________________________
     // Fuctionality of Backend (6)

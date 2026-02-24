@@ -182,7 +182,9 @@ public class EntityManagerDAO<T> implements IDAO<T> {
     // Java 17 doesn't handle switch-case for instanceof
 
     private T findById(Object id) {
-        if (id instanceof Integer) {
+        if (id instanceof Long) {
+            return em.find(classSpecific, (Long) id);
+        } else if (id instanceof Integer) {
             return em.find(classSpecific, (Integer) id);
         } else if (id instanceof String) {
             return em.find(classSpecific, (String) id);
