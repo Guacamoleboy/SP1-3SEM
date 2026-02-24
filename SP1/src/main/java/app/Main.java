@@ -1,6 +1,6 @@
 package app;
 
-import app.service.external.MovieTMDBService;
+import app.util.PopulateDB;
 
 public class Main {
 
@@ -9,10 +9,8 @@ public class Main {
     // ______________________________________________
 
     public static void main(String[] args) {
-
-        // Empty right now.
-        MovieTMDBService mv = new MovieTMDBService();
-        mv.getDanishMoviesByRelease(5L);
+        PopulateDB.populateRoles();
+        PopulateDB.populateLanguages();
     }
 
 }

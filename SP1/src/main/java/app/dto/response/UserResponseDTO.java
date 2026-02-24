@@ -11,7 +11,7 @@ public class UserResponseDTO {
 
     // Outbound
 
-    // Output JSON format:
+    // Expected JSON format from backend:
     // ___________________
     //
     //      {

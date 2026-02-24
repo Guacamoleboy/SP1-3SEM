@@ -62,4 +62,16 @@ public class UserService extends EntityManagerService<User> {
         return new UserResponseDTO(user);
     }
 
+    // _________________________________________________________
+
+    public User findByEmail(String emailHash) {
+        return findEntityByColumn(emailHash, "emailHash");
+    }
+
+    // _________________________________________________________
+
+    public User findByUsername(String username) {
+        return findEntityByColumn(username, "username");
+    }
+
 }

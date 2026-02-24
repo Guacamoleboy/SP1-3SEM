@@ -1,9 +1,5 @@
 package app.enums;
 
-// Can use @Data, @AllArgsContructor from Lombok, but doing it explicit to understand the backend
-// structure of an enum.
-// - Jonas
-
 public enum RoleEnum {
 
     // Enums
