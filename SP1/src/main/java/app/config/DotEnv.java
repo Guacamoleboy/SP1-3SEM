@@ -2,6 +2,11 @@ package app.config;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
+// Created by: Guacamoleboy
+// ________________________
+// Last updated: 24/02-2026
+// By: Guacamoleboy
+
 public class DotEnv {
 
     // Attributes
