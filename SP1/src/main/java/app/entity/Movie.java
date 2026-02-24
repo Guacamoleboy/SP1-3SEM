@@ -35,15 +35,15 @@ public class Movie {
     private List<Genre> genre;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "movie_infos_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "movie_info_id", referencedColumnName = "id", nullable = false)
     private MovieInfo movieInfo;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "collections_id", referencedColumnName = "id")
+    @JoinColumn(name = "collection_id", referencedColumnName = "id")
     private Collection collection;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ratings_id", referencedColumnName = "id")
+    @JoinColumn(name = "rating_id", referencedColumnName = "id")
     private Rating rating;
 
     @ManyToMany
