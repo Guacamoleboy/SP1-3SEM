@@ -72,27 +72,34 @@ public class MovieTMDBService {
         String finalUrl = BASE_URL_DISCOVER
                 + "?api_key=" + DotEnv.getTmdbKey()
                 + "&region=DK"
-                + "&with_original_language=da"          // fixed typo
-                + "&primary_release_date.gte=" + startDateString  // fixed typo
+                + "&with_original_language=da"
+                + "&primary_release_date.gte=" + startDateString
                 + "&primary_release_date.lte=" + endDateString;
 
-        System.out.println("Fetching: " + finalUrl);
+        // Debug (Confirmed as working)
+        // System.out.println("Fetching: " + finalUrl);
 
         try {
+
+            // Request
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(finalUrl))
                     .timeout(Duration.ofSeconds(10))
                     .GET()
                     .build();
 
+            // ASync Query
             return PoolConfig.getClient()
                     .sendAsync(request, BodyHandlers.ofString())
                     .thenApply(response -> {
+
+                        // 200 validation or fail
                         if (response.statusCode() != 200) {
                             throw new ApiException(response.statusCode(), "Failed to fetch danish movies", this.getClass().getName());
                         }
                         try {
-                            // Fixed: now maps to MoviePageTMDBDTO instead of MovieTMDBDTO
+
+                            // (Rasmus) Fixed: using multi movie wrapper now instead of singular (MoviePageTMDBDTO)!
                             return PoolConfig.getMapper().readValue(response.body(), MoviePageTMDBDTO.class);
                         } catch (Exception e) {
                             throw new ApiException("Failed to parse MoviePageTMDBDTO", e, this.getClass().getName());
@@ -104,5 +111,6 @@ public class MovieTMDBService {
                     "Failed to build request", e, this.getClass().getName()
             ));
         }
+
     }
 }

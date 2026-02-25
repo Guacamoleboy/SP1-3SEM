@@ -12,9 +12,11 @@ import java.util.Map;
 
 public class MovieController {
 
-    private final MovieService movieService;
-    private final MovieTMDBService movieTMDBService;
-    private final GenreService genreService;
+    // Attributes
+    private final MovieService movieService; // Internal
+    private final MovieTMDBService movieTMDBService; // External
+    private final GenreService genreService; // Internal
+    // TODO: HashMap for Genres.
 
     public MovieController(EntityManager em) {
         this.movieTMDBService = new MovieTMDBService();
@@ -27,18 +29,28 @@ public class MovieController {
     // Step 2: Fetch movies, attach persisted genres, save movies
     // Genres must exist before movies due to @ManyToMany constraint
 
-    public void populateDatabase(Long years) {
-        genreService.persistAllFromTMDB();
+    // Should only be used once in a while.
+    // TODO: Store Genres in a HashMap as global attribute instead of having to call TMBD each time
+    // TODO: we want a genre. Genres don't change often. No need to call TMDB unless it's neeeded. (rate limit)
+    public void getDanishMoviesByRelease(Long years) {
 
+        // First we get all genres
+        genreService.getAllGenresFromTMDB();
+
+        // Then we get all Danish Movies
         MoviePageTMDBDTO page = movieTMDBService.getDanishMoviesByRelease(years).join();
         List<Movie> movies = MovieConverter.toEntityList(page.getResults());
         movieService.persistMovies(movies, genreService);
-
         System.out.println("Stored " + movies.size() + " movies.");
     }
 
     // _______________________________________________
     // Sync DB with TMDB - adds new, removes deleted
+
+    // TODO: Jonas - 25/02-2026
+    // TODO: ___________________
+    // TODO:
+    // TODO: Move to PopulatorDB?
 
     public void syncDatabase(Long years) {
         MoviePageTMDBDTO page = movieTMDBService.getDanishMoviesByRelease(years).join();

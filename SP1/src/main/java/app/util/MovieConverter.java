@@ -57,6 +57,7 @@ public class MovieConverter {
         }
 
         List<Genre> genres = null;
+
         if (dto.getGenres() != null) {
             // Full genre objects (from single movie endpoint)
             genres = dto.getGenres().stream()
@@ -88,4 +89,6 @@ public class MovieConverter {
                 .map(MovieConverter::toEntity)
                 .collect(Collectors.toList());
     }
+
+
 }

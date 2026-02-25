@@ -9,8 +9,16 @@ import java.util.List;
 
 public class GenreService extends EntityManagerService<Genre> {
 
+    // TODO: Jonas - 25/02-2026
+    // TODO: _________________
+    // TODO:
+    // TODO: Genre doesn't change often. Should be called once and stored in DB like Role / Language.
+    // TODO: Can be ran when needed to check. Should only populate once - maybe move it to PopulatorDB ?
+
     private final GenreDAO genreDAO;
     private final GenreTMDBService genreTMDBService;
+
+    // ____________________________________________________________
 
     public GenreService(EntityManager em) {
         super(new GenreDAO(em), Genre.class);
@@ -18,7 +26,9 @@ public class GenreService extends EntityManagerService<Genre> {
         this.genreTMDBService = new GenreTMDBService();
     }
 
-    public void persistAllFromTMDB() {
+    // ____________________________________________________________
+
+    public void getAllGenresFromTMDB() {
         List<GenreTMDBDTO> genreDTOs = genreTMDBService.getAllGenres().join();
         for (GenreTMDBDTO dto : genreDTOs) {
             if (!existByColumn(dto.getId(), "id")) {

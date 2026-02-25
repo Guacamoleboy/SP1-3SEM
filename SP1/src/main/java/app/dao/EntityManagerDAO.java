@@ -26,8 +26,12 @@ public class EntityManagerDAO<T> implements IDAO<T> {
     @Override
     public T create(T t) {
         return executeQuery(() -> {
-            em.persist(t);
-            return t;
+            if (em.contains(t)) {
+                return t;
+            } else {
+                em.persist(t);
+                return t;
+            }
         });
     }
 

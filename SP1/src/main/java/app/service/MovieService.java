@@ -194,8 +194,12 @@ public class MovieService extends EntityManagerService<Movie> {
         this.movieList.addAll(movieDAO.getAll());
     }
 
+    // _____________________________________________
+    // TODO:
+
     public void persistMovies(List<Movie> movies, GenreService genreService) {
         for (Movie movie : movies) {
+
             // Swap genres for persisted DB instances
             if (movie.getGenre() != null) {
                 List<Genre> persistedGenres = movie.getGenre().stream()
@@ -204,10 +208,13 @@ public class MovieService extends EntityManagerService<Movie> {
                         .toList();
                 movie.setGenre(persistedGenres);
             }
+
             // Only insert if not already in DB
             if (!existByColumn(movie.getMovieInfo().getTmdbId(), "movieInfo.tmdbId")) {
                 movieDAO.create(movie);
             }
+
         }
     }
+
 }

@@ -20,15 +20,23 @@ public class DotEnv {
     // DotEnv.getTmdbKey(). Returns a String.
 
     static {
+
+        // Environment setup + file definition
+        // set.env is used for terminal access (change of .env file).
+        // For example running the program in terminal with test as environement will
+        // load .env.test. If there's no test available it'll fall back to our environement attribute.
+
         String environmentLoad = System.getProperty("set.env", environment);
         String filename = ".env." + environmentLoad;
 
+        // Load (I/O) the .env.development file
         dotenv = Dotenv.configure()
                 .directory("src/main/resources")
                 .filename(filename)
                 .ignoreIfMissing()
                 .load();
 
+        // Set value(s)
         TMDB_KEY = dotenv.get("TMDB_KEY");
         // .... more?
 

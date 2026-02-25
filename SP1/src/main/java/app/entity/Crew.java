@@ -20,17 +20,17 @@ public class Crew {
     // Not using enum anymore as department does the same from JSON.
     // Can be used to sort later if needed (enum).
 
+    // 1 -> Female | 2 -> Male
+
     @Id
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
-    private Integer gender;                       // 1 -> Female | 2 -> Male
+    private Integer gender;
     private String department;
     private String job;
     private String name;
-
     @Column(name = "credit_id")
     private String creditId;
-
     @ManyToOne
     @JoinColumn(name = "movie_id")
     private Movie movie;
