@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -27,7 +28,7 @@ public class Movie {
     @Column(name ="id", unique = true)
     private Long id;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "movies_genres",                                                         // New movie table
         joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"),             // Here
         inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id")       // There
