@@ -210,8 +210,8 @@ public enum LanguageEnum {
 
     LanguageEnum(String countryCode, String iso639, String iso3166) {
         this.countryCode = countryCode;
-        this.iso639 = iso639;
-        this.iso3166 = iso3166;
+        this.iso639 = iso639;   //
+        this.iso3166 = iso3166; // region
     }
 
     // ____________________________________________________________________

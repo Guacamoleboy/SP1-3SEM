@@ -11,8 +11,6 @@ public class MovieConverter {
 
     // Attributes
 
-    // TODO: Needs to be refactored probably. Seems like some steps are not needed? (Jonas)
-
     //  __________________________________________________________________________
 
     public static Movie toEntity(MovieTMDBDTO dto) {
@@ -32,12 +30,19 @@ public class MovieConverter {
         if (dto.getMovieInfo() != null) {
 
             LanguageEnum language = null;
-            try {
-                if (dto.getMovieInfo().getOriginalLanguage() != null) {
-                    language = LanguageEnum.valueOf(dto.getMovieInfo().getOriginalLanguage().toUpperCase());
+            String rawLang = dto.getMovieInfo().getOriginalLanguage();
+
+            if (rawLang != null) {
+                if (rawLang.equalsIgnoreCase("da")) {
+                    language = LanguageEnum.DENMARK;
+                } else {
+                    try {
+                        language = LanguageEnum.valueOf(rawLang.toUpperCase());
+                    } catch (IllegalArgumentException e) {
+                        System.err.println("Sprog koden '" + rawLang + "' findes ikke i LanguageEnum");
+                        language = null;
+                    }
                 }
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("Unknown language '" + dto.getMovieInfo().getOriginalLanguage() + "' for movie id " + dto.getId(), e);
             }
 
             LocalDate releaseDate = null;
