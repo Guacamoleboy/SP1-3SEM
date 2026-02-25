@@ -15,5 +15,13 @@ public class RoleDAO extends EntityManagerDAO<Role> {
 
     // _______________________________________________________________
 
+    // Part of IDAO Interface. Implements these by default:
+    // ___________________
+    //
+    // create() | update() | getById() | getColumnById() | updateColumnById()
+    // existByColumn() | findEntityByColumn() | getAll() | delete() | deletebyId | deleteAll()
+
+    // _______________________________________________________________
+
 
 }

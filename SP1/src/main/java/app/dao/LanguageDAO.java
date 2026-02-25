@@ -1,16 +1,16 @@
 package app.dao;
 
-import app.entity.Rating;
+import app.entity.Language;
 import jakarta.persistence.EntityManager;
 
-public class RatingDAO extends EntityManagerDAO<Rating> {
+public class LanguageDAO extends EntityManagerDAO<Language> {
 
     // Attributes
 
     // _______________________________________________________________
 
-    public RatingDAO(EntityManager em) {
-        super(em, Rating.class);
+    public LanguageDAO(EntityManager em) {
+        super(em, Language.class);
     }
 
     // _______________________________________________________________
@@ -22,5 +22,6 @@ public class RatingDAO extends EntityManagerDAO<Rating> {
     // existByColumn() | findEntityByColumn() | getAll() | delete() | deletebyId | deleteAll()
 
     // _______________________________________________________________
+
 
 }

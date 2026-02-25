@@ -28,16 +28,8 @@ public class Language {
     @Column(name = "id", columnDefinition = "uuid", unique = true, nullable = false)
     private UUID id;
 
-    @Column(name = "name", unique = true)
-    private String name;
-
-    @Column(name = "iso_639_1")
-    private String formatting;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "language_enum", nullable = false)
     private LanguageEnum languageEnum;
-
-    // _______________________________________________________
 
 }
