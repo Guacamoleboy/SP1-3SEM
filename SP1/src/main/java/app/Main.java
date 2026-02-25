@@ -24,14 +24,14 @@ public class Main {
         // TODO: Move to PopulatorDB?
         /*controller.populateDatabase(5L);*/
 
+        /*
         MovieTMDBService movieTMDBService = new MovieTMDBService();
         movieTMDBService.getDanishMoviesByRelease(5L);
+        */
 
-
-        /*
         PopulateDB.populateRoles();
         PopulateDB.populateLanguages();
-        */
+
     }
 
 }

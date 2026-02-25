@@ -1,4 +1,4 @@
-package app.util;
+package app.service.converter;
 
 import app.dto.external.MovieTMDBDTO;
 import app.entity.*;
@@ -9,7 +9,15 @@ import java.util.stream.Collectors;
 
 public class MovieConverter {
 
+    // Attributes
+
+    // TODO: Needs to be refactored probably. Seems like some steps are not needed? (Jonas)
+
+    //  __________________________________________________________________________
+
     public static Movie toEntity(MovieTMDBDTO dto) {
+
+        // Initial validation
         if (dto == null) return null;
 
         Rating rating = null;
@@ -22,34 +30,33 @@ public class MovieConverter {
 
         MovieInfo movieInfo = null;
         if (dto.getMovieInfo() != null) {
-            // Parse LanguageEnum safely
+
             LanguageEnum language = null;
             try {
                 if (dto.getMovieInfo().getOriginalLanguage() != null) {
                     language = LanguageEnum.valueOf(dto.getMovieInfo().getOriginalLanguage().toUpperCase());
                 }
             } catch (IllegalArgumentException e) {
-                // Language not in enum, leave as null
+                throw new IllegalArgumentException("Unknown language '" + dto.getMovieInfo().getOriginalLanguage() + "' for movie id " + dto.getId(), e);
             }
 
-            // Parse LocalDate safely
             LocalDate releaseDate = null;
             try {
                 if (dto.getMovieInfo().getReleaseDate() != null && !dto.getMovieInfo().getReleaseDate().isEmpty()) {
                     releaseDate = LocalDate.parse(dto.getMovieInfo().getReleaseDate());
                 }
             } catch (Exception e) {
-                // Unparseable date, leave as null
+                throw new IllegalArgumentException("Invalid release date '" + dto.getMovieInfo().getReleaseDate() + "' for movie id " + dto.getId(), e);
             }
 
             movieInfo = MovieInfo.builder()
-                    .tmdbId(dto.getId())                          // MovieInfo uses tmdbId, not id (id is UUID auto-generated)
+                    .tmdbId(dto.getId())
                     .title(dto.getMovieInfo().getTitle())
                     .originalTitle(dto.getMovieInfo().getOriginalTitle())
                     .overview(dto.getMovieInfo().getOverview())
-                    .backdropPath(dto.getMovieInfo().getBackdropPath())  // no posterPath in entity
-                    .originalLanguage(language)                   // must be LanguageEnum, not String
-                    .releaseDate(releaseDate)                     // must be LocalDate, not String
+                    .backdropPath(dto.getMovieInfo().getBackdropPath())
+                    .originalLanguage(language)
+                    .releaseDate(releaseDate)
                     .adult(dto.getMovieInfo().isAdult())
                     .budget(dto.getMovieInfo().getBudget())
                     .runTime(dto.getMovieInfo().getRunTime())
@@ -57,20 +64,11 @@ public class MovieConverter {
         }
 
         List<Genre> genres = null;
-
         if (dto.getGenres() != null) {
-            // Full genre objects (from single movie endpoint)
             genres = dto.getGenres().stream()
                     .map(g -> Genre.builder()
                             .id(g.getId())
                             .genreName(g.getName())
-                            .build())
-                    .collect(Collectors.toList());
-        } else if (dto.getGenreIds() != null) {
-            // Just IDs (from discover/list endpoint) - build stubs for the controller to swap out
-            genres = dto.getGenreIds().stream()
-                    .map(id -> Genre.builder()
-                            .id(id)
                             .build())
                     .collect(Collectors.toList());
         }
@@ -83,12 +81,13 @@ public class MovieConverter {
                 .build();
     }
 
+    //  __________________________________________________________________________
+
     public static List<Movie> toEntityList(List<MovieTMDBDTO> dtos) {
         if (dtos == null) return List.of();
         return dtos.stream()
                 .map(MovieConverter::toEntity)
                 .collect(Collectors.toList());
     }
-
 
 }

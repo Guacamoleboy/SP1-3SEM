@@ -195,8 +195,9 @@ public class MovieService extends EntityManagerService<Movie> {
     }
 
     // _____________________________________________
-    // TODO:
+    // TODO: Fix.
 
+    /*
     public void persistMovies(List<Movie> movies, GenreService genreService) {
         for (Movie movie : movies) {
 
@@ -216,5 +217,7 @@ public class MovieService extends EntityManagerService<Movie> {
 
         }
     }
+    */
+
 
 }
