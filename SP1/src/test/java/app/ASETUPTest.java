@@ -1,4 +1,4 @@
-package app.dao;
+package app;
 
 import app.config.HibernateConfig;
 import jakarta.persistence.EntityManager;
@@ -6,7 +6,7 @@ import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public abstract class ADAOTest {
+public abstract class ASETUPTest {
 
     // Attributes
     protected EntityManagerFactory emf;
