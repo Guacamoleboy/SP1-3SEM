@@ -5,6 +5,8 @@ import app.config.PoolConfig;
 import app.dto.external.MoviePageTMDBDTO;
 import app.dto.external.MovieTMDBDTO;
 import app.exception.ApiException;
+import app.service.converter.MovieConverter;
+
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse.BodyHandlers;
@@ -63,7 +65,8 @@ public class MovieTMDBService {
 
     private static final String BASE_URL_DISCOVER = "https://api.themoviedb.org/3/discover/movie";
 
-    public CompletableFuture<MoviePageTMDBDTO> getDanishMoviesByRelease(Long years) {
+
+    public CompletableFuture<MoviePageTMDBDTO> getDanishMoviesByRelease(Long years, int page) {
 
         LocalDate endDate = LocalDate.now();
         String endDateString = endDate.toString();
@@ -71,10 +74,10 @@ public class MovieTMDBService {
 
         String finalUrl = BASE_URL_DISCOVER
                 + "?api_key=" + DotEnv.getTmdbKey()
-                + "&region=DK"
                 + "&with_original_language=da"
                 + "&primary_release_date.gte=" + startDateString
                 + "&primary_release_date.lte=" + endDateString;
+                + "&page=" + page;
 
         // Debug (Confirmed as working)
         // System.out.println("Fetching: " + finalUrl);
@@ -98,8 +101,6 @@ public class MovieTMDBService {
                             throw new ApiException(response.statusCode(), "Failed to fetch danish movies", this.getClass().getName());
                         }
                         try {
-
-                            // (Rasmus) Fixed: using multi movie wrapper now instead of singular (MoviePageTMDBDTO)!
                             return PoolConfig.getMapper().readValue(response.body(), MoviePageTMDBDTO.class);
                         } catch (Exception e) {
                             throw new ApiException("Failed to parse MoviePageTMDBDTO", e, this.getClass().getName());
@@ -113,4 +114,5 @@ public class MovieTMDBService {
         }
 
     }
+
 }

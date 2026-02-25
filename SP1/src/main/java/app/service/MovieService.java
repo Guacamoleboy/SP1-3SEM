@@ -1,10 +1,16 @@
 package app.service;
 
 import app.dao.MovieDAO;
+import app.dto.external.MovieTMDBDTO;
 import app.entity.Movie;
 import app.enums.CreditTitleEnum;
+import app.enums.LanguageEnum;
+import app.service.converter.MovieConverter;
+import app.service.external.MovieTMDBService;
 import jakarta.persistence.EntityManager;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import app.entity.Genre;
 
 public class MovieService extends EntityManagerService<Movie> {
@@ -12,6 +18,7 @@ public class MovieService extends EntityManagerService<Movie> {
     // Attributes
     private final MovieDAO movieDAO;
     private final List<Movie> movieList; // Cache to prevent multi DB call for no reason
+    private final MovieTMDBService movieTMDBService = new MovieTMDBService();
 
     // _____________________________________________
 
@@ -126,6 +133,54 @@ public class MovieService extends EntityManagerService<Movie> {
     }
 
     // _____________________________________________
+
+    public void syncDanishMoviesFromApi(Long years) {
+        movieTMDBService.getDanishMoviesByRelease(years, 1)
+                .thenAccept(pageDTO -> {
+                    syncWithTmdb(pageDTO.getResults());
+                    System.out.println("Sync gennemført for de sidste " + years + " år.");
+                })
+                .exceptionally(ex -> {
+                    System.err.println("Fejl under sync: " + ex.getMessage());
+                    return null;
+                });
+    }
+
+    // _____________________________________________
+
+    public void fetchAndSaveDanishMovies(Long years, int page) {
+        movieTMDBService.getDanishMoviesByRelease(years, page)
+                .thenAccept(pageDTO -> {
+                    List<MovieTMDBDTO> dtos = pageDTO.getResults();
+                    if (dtos != null && !dtos.isEmpty()) {
+                        syncWithTmdb(dtos);
+                        System.out.println("Sync fuldført for " + dtos.size() + " film.");
+                    }
+                })
+                .exceptionally(ex -> {
+                    System.err.println("Fejl i sync flow: " + ex.getMessage());
+                    return null;
+                });
+    }
+
+    // _____________________________________________
+
+    /*
+    public void fetchMultiplePages(Long years, int totalPages) {
+        for (int i = 1; i <= totalPages; i++) {
+            final int currentPage = i;
+            movieTMDBService.getDanishMoviesByRelease(years, currentPage)
+                    .thenAccept(pageDTO -> {
+                        syncWithTmdb(pageDTO.getResults());
+                        System.out.println("Hentet side " + currentPage);
+                    });
+        }
+    }
+    */
+
+    // _____________________________________________
+
+    // _____________________________________________
     // Functionality of Backend - Bonus (3)
     // ____________________________________
     //
@@ -137,53 +192,45 @@ public class MovieService extends EntityManagerService<Movie> {
     // apiIds -> List of IDs from TMDB Fetch to check against local storage
     // movieList -> Curent cached local storage
 
-    public void syncWithTmdb(List<Long> apiIds, List<Movie> apiMovies) {
+    public void syncWithTmdb(List<MovieTMDBDTO> apiDtos) {
 
-        // Danish movies only now else we would make 1200 calls to their API if we used getById()
-        // TODO: Find a method that returns all TMDB Movies (?) and then use that with page=?
-        // TODO: Else we would hit rate limit instantly.
+        List<Movie> apiMovies = MovieConverter.toEntityList(apiDtos);
 
-        // Remove if no longer present in API Fetch
+        List<Long> apiIds = new ArrayList<>();
+        for (Movie m : apiMovies) {
+            apiIds.add(m.getId());
+        }
+
         List<Movie> toRemove = new ArrayList<>();
-        for (Movie movie : movieList) {
-            if (!apiIds.contains(movie.getId())) {
-                toRemove.add(movie);
+        for (Movie dbMovie : movieList) {
+            if (!apiIds.contains(dbMovie.getId())) {
+                toRemove.add(dbMovie);
             }
         }
 
-        // Delete
-        for (Movie movieDB : toRemove) {
-            movieDAO.delete(movieDB);
+        for (Movie m : toRemove) {
+            movieDAO.delete(m);
         }
 
-        // Add Movies
         List<Movie> toAdd = new ArrayList<>();
-        for (Movie movieFetch : apiMovies) {
-
-            // Locally = Our DB
-            boolean existsLocally = false;
-
-            // For-each over DB movies vs movieList (cache)
-            for (Movie movieDB : movieList) {
-                if (movieDB.getId().equals(movieFetch.getId())) {
-                    existsLocally = true;
+        for (Movie apiMovie : apiMovies) {
+            boolean existsInDb = false;
+            for (Movie dbMovie : movieList) {
+                if (dbMovie.getId().equals(apiMovie.getId())) {
+                    existsInDb = true;
                     break;
                 }
             }
 
-            // If not found. Add it.
-            if (!existsLocally) {
-                toAdd.add(movieFetch);
+            if (!existsInDb) {
+                toAdd.add(apiMovie);
             }
-
         }
 
-        // Create
-        for (Movie movie : toAdd) {
-            movieDAO.create(movie);
+        for (Movie m : toAdd) {
+            movieDAO.create(m);
         }
 
-        // Cache update
         refreshMovieCache();
     }
 
@@ -195,29 +242,11 @@ public class MovieService extends EntityManagerService<Movie> {
     }
 
     // _____________________________________________
-    // TODO: Fix.
+    // DB Fetch Danish movies
 
-    /*
-    public void persistMovies(List<Movie> movies, GenreService genreService) {
-        for (Movie movie : movies) {
-
-            // Swap genres for persisted DB instances
-            if (movie.getGenre() != null) {
-                List<Genre> persistedGenres = movie.getGenre().stream()
-                        .map(g -> genreService.getById(g.getId()))
-                        .filter(Objects::nonNull)
-                        .toList();
-                movie.setGenre(persistedGenres);
-            }
-
-            // Only insert if not already in DB
-            if (!existByColumn(movie.getMovieInfo().getTmdbId(), "movieInfo.tmdbId")) {
-                movieDAO.create(movie);
-            }
-
-        }
+    public List<Movie> getAllDanishMovies(){
+        return movieDAO.getAllDanishMovies(LanguageEnum.DENMARK.getIso639());
     }
-    */
 
 
 }

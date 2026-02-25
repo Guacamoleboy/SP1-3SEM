@@ -13,7 +13,7 @@ public class MoviePageTMDBDTO {
 
     // Wrapper for
     // ____________
-    // https://api.themoviedb.org/3/discover/movie?region=ISO-3611-1&with_original_language=ISO-639-1
+    // https://api.themoviedb.org/3/discover/movie?region=DK&with_original_language=da
     //
     // Docs:
     // https://developer.themoviedb.org/reference/discover-movie

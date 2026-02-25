@@ -1,12 +1,11 @@
 package app.controller;
 
-import app.dto.external.MoviePageTMDBDTO;
+import app.dto.external.MovieTMDBDTO;
 import app.entity.Movie;
 import app.service.GenreService;
 import app.service.MovieService;
 import app.service.external.GenreTMDBService;
 import app.service.external.MovieTMDBService;
-import app.service.converter.MovieConverter;
 import app.service.sync.GenreSyncService;
 import jakarta.persistence.EntityManager;
 import java.util.List;
@@ -32,10 +31,9 @@ public class MovieController {
     }
 
     // _______________________________________________
-    // TODO: Fix
 
-    public void getDanishMoviesByRelease(Long years) {
-        genreSyncService.genreSyncCheck();
+    public void getDanishMoviesByRelease() {
+        movieService.syncDanishMoviesFromApi(5L);
     }
 
     // _______________________________________________

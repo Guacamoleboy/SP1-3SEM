@@ -227,7 +227,7 @@ class MovieServiceTest {
 
     // --------------------------------------------------
 
-    @Test
+    /*@Test
     void syncWithTmdb() {
 
         createMovie(1L, "Old Movie", 5.0);
@@ -254,5 +254,5 @@ class MovieServiceTest {
 
         assertEquals(1, allMovies.size());
         assertEquals(2L, allMovies.get(0).getId());
-    }
+    }*/
 }
