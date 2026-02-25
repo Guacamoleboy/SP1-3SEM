@@ -1,12 +1,9 @@
 package app.controller;
 
-import app.dao.GenreDAO;
-import app.dto.external.GenreTMDBDTO;
 import app.dto.external.MoviePageTMDBDTO;
-import app.entity.Genre;
 import app.entity.Movie;
+import app.service.GenreService;
 import app.service.MovieService;
-import app.service.external.GenreTMDBService;
 import app.service.external.MovieTMDBService;
 import app.util.MovieConverter;
 import jakarta.persistence.EntityManager;
@@ -17,14 +14,12 @@ public class MovieController {
 
     private final MovieService movieService;
     private final MovieTMDBService movieTMDBService;
-    private final GenreTMDBService genreTMDBService;
-    private final GenreDAO genreDAO;
+    private final GenreService genreService;
 
     public MovieController(EntityManager em) {
         this.movieTMDBService = new MovieTMDBService();
-        this.genreTMDBService = new GenreTMDBService();
         this.movieService = new MovieService(em);
-        this.genreDAO = new GenreDAO(em);
+        this.genreService = new GenreService(em);
     }
 
     // _______________________________________________
@@ -33,38 +28,12 @@ public class MovieController {
     // Genres must exist before movies due to @ManyToMany constraint
 
     public void populateDatabase(Long years) {
+        genreService.persistAllFromTMDB();
 
-        // Step 1: Save genres
-        List<GenreTMDBDTO> genreDTOs = genreTMDBService.getAllGenres().join();
-        for (GenreTMDBDTO dto : genreDTOs) {
-            Genre genre = Genre.builder()
-                    .id(dto.getId())
-                    .genreName(dto.getName())
-                    .build();
-            if (!genreDAO.existByColumn(dto.getId(), "id")) {
-                genreDAO.create(genre);
-            }
-        }
-        System.out.println("Stored " + genreDTOs.size() + " genres.");
-
-        // Step 2: Fetch and save movies
         MoviePageTMDBDTO page = movieTMDBService.getDanishMoviesByRelease(years).join();
         List<Movie> movies = MovieConverter.toEntityList(page.getResults());
+        movieService.persistMovies(movies, genreService);
 
-        for (Movie movie : movies) {
-            // Swap DTO-built genres for persisted DB genres to avoid duplicate key errors
-            if (movie.getGenre() != null) {
-                List<Genre> persistedGenres = movie.getGenre().stream()
-                        .map(g -> genreDAO.getById(g.getId()))
-                        .filter(g -> g != null)
-                        .toList();
-                movie.setGenre(persistedGenres);
-            }
-
-            // Only insert if this movie doesn't already exist in the DB
-            if (!movieService.existByColumn(movie.getMovieInfo().getTmdbId(), "movieInfo.tmdbId")) {
-            }
-        }
         System.out.println("Stored " + movies.size() + " movies.");
     }
 

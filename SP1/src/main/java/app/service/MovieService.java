@@ -5,6 +5,7 @@ import app.entity.Movie;
 import app.enums.CreditTitleEnum;
 import jakarta.persistence.EntityManager;
 import java.util.*;
+import app.entity.Genre;
 
 public class MovieService extends EntityManagerService<Movie> {
 
@@ -193,4 +194,20 @@ public class MovieService extends EntityManagerService<Movie> {
         this.movieList.addAll(movieDAO.getAll());
     }
 
+    public void persistMovies(List<Movie> movies, GenreService genreService) {
+        for (Movie movie : movies) {
+            // Swap genres for persisted DB instances
+            if (movie.getGenre() != null) {
+                List<Genre> persistedGenres = movie.getGenre().stream()
+                        .map(g -> genreService.getById(g.getId()))
+                        .filter(Objects::nonNull)
+                        .toList();
+                movie.setGenre(persistedGenres);
+            }
+            // Only insert if not already in DB
+            if (!existByColumn(movie.getMovieInfo().getTmdbId(), "movieInfo.tmdbId")) {
+                movieDAO.create(movie);
+            }
+        }
+    }
 }
