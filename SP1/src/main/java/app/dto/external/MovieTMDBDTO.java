@@ -16,9 +16,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MovieTMDBDTO {
 
-    // @JsonUnwrapped is used in order to get RatingTMDBDTO objects
-    // as vote_xxx is on root level.
-    // TODO: NOT TESTED YET! Got to run code in order to check it.
+    // Inbound - One Singular Movie
 
     // Wrapper for
     // ____________
@@ -27,6 +25,27 @@ public class MovieTMDBDTO {
     // Docs:
     // https://developer.themoviedb.org/reference/movie-details
 
+    // Expected JSON format from frontend:
+    // ___________________
+    //
+    //      {
+    //          "adult": false,
+    //          "backdrop_path": "/fkowakowkaofkfokawf.jpg",
+    //          "belongs_to_collection": null or [],
+    //          "budget": 0,
+    //          "genres": [
+    //              {
+    //              "id": 99,
+    //              "name": "Documentary"
+    //          ],
+    //          "id": 65010101
+    //          osv.....
+    //      }
+    //
+    // ___________________
+    // TESTED: NO
+    // BY: N/A
+
     private Long id;
 
     // @OneToOne relations so no List needed
@@ -34,6 +53,8 @@ public class MovieTMDBDTO {
     private MovieInfoTMDBDTO movieInfo;
     @JsonUnwrapped
     private RatingTMDBDTO rating;
+
+    // Genre Object (id, name).
     private List<GenreTMDBDTO> genres;
 
     // Objects or null

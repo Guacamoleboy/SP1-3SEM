@@ -40,7 +40,8 @@ public class MovieInfo {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "overview")
+    // Plot summaries can be long. varchar(255) might not be enough.
+    @Column(name = "overview", columnDefinition = "TEXT")
     private String overview;
 
     @Column(name = "release_date")
@@ -55,20 +56,18 @@ public class MovieInfo {
     @Column(name = "run_time")
     private Integer runTime;
 
-
     @ManyToMany
     @JoinTable(name = "movie_info_crews",                                                         // New movie table
             joinColumns = @JoinColumn(name = "movie_info_id", referencedColumnName = "id"),       // Here
             inverseJoinColumns = @JoinColumn(name = "crew_id", referencedColumnName = "id")       // There
     )
     List<Crew> crews;
+
     @ManyToMany
     @JoinTable(name = "movie_info_casts",
             joinColumns = @JoinColumn(name = "movie_info_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "cast_id", referencedColumnName = "id")
     )
     List<Cast> casts;
-
-    // _________________________________________________________
 
 }

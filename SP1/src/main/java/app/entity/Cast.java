@@ -17,14 +17,16 @@ public class Cast {
     // Actor
     // Many (Cast) One (Movie)
 
+    // 1 -> Female | 2 -> Male
+
     // Attributes
     @Id
     private Long id;
     private String character;
 
-    @Column(name = "sort_order")
+    @Column(name = "cast_order")
     private Integer order;
-    private Integer gender;                     // 1 -> Female | 2 -> Male
+    private Integer gender;
     private String name;
 
     @Column(name="cast_id")
