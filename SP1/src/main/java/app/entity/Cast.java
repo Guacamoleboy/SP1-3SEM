@@ -21,6 +21,8 @@ public class Cast {
     @Id
     private Long id;
     private String character;
+
+    @Column(name = "sort_order")
     private Integer order;
     private Integer gender;                     // 1 -> Female | 2 -> Male
     private String name;
