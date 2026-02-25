@@ -36,6 +36,9 @@ public class MovieTMDBDTO {
     private RatingTMDBDTO rating;
     private List<GenreTMDBDTO> genres;
 
+    @JsonProperty("genre_ids")
+    private List<Long> genreIds;
+
     // Objects or null
     @JsonProperty("production_companies")
     private List<CompanyTMDBDTO> productionCompanies;

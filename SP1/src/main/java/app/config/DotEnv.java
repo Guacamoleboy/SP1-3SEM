@@ -20,10 +20,11 @@ public class DotEnv {
         // For example running the program in terminal with test as environement will
         // load .env.test. If there's no test available it'll fall back to our environement attribute.
         String environmentLoad = System.getProperty("set.env", environment);
-        String filename = "src/main/resources/.env." + environmentLoad;
+        String filename = ".env." + environmentLoad;
 
         // Load (I/O) the .env.development file
         dotenv = Dotenv.configure()
+                .directory("src/main/resources")
                 .filename(filename)
                 .ignoreIfMissing()
                 .load();
@@ -33,7 +34,7 @@ public class DotEnv {
         // .... more?
 
         if (TMDB_KEY == null) {
-            System.out.println("No TMDB_KEY found in: " + filename);
+            System.out.println("No TMDB_KEY found in: src/main/resources/" + filename);
         }
 
     }

@@ -1,18 +1,13 @@
 package app;
 
-import app.service.external.MovieTMDBService;
+import app.config.HibernateConfig;
+import app.controller.MovieController;
+import jakarta.persistence.EntityManager;
 
 public class Main {
-
-    // Attributes
-
-    // ______________________________________________
-
     public static void main(String[] args) {
-
-        // Empty right now.
-        MovieTMDBService mv = new MovieTMDBService();
-        mv.getDanishMoviesByRelease(5L);
+        EntityManager em = HibernateConfig.getEntityManagerFactory().createEntityManager();
+        MovieController controller = new MovieController(em);
+        controller.populateDatabase(5L);
     }
-
 }

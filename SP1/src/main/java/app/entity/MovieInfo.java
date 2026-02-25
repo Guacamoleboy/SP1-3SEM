@@ -27,7 +27,7 @@ public class MovieInfo {
     @Column(name = "adult")
     private boolean adult;
 
-    @Column(name = "backdrop_path", unique = true)
+    @Column
     private String backdropPath;
 
     @Enumerated(EnumType.STRING)
@@ -40,7 +40,7 @@ public class MovieInfo {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "overview")
+    @Column(columnDefinition = "TEXT")  //Plot summaries can be long. varchar(255) might not be enough.
     private String overview;
 
     @Column(name = "release_date")

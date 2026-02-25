@@ -21,6 +21,7 @@ public class Cast {
     @Id
     private Long id;
     private String character;
+    @Column(name="cast_order")  // "order" is a reserved SQL keyword, renamed to cast_order
     private Integer order;
     private Integer gender;                     // 1 -> Female | 2 -> Male
     private String name;

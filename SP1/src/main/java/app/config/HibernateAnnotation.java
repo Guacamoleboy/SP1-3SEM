@@ -10,6 +10,7 @@ public class HibernateAnnotation {
     // ______________________________________________________________________
 
     public static void registerEntities(Configuration configuration) {
+        configuration.addAnnotatedClass(Cast.class);
         configuration.addAnnotatedClass(Collection.class);
         configuration.addAnnotatedClass(Company.class);
         configuration.addAnnotatedClass(Crew.class);
