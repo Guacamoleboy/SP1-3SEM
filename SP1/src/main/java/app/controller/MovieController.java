@@ -1,6 +1,5 @@
 package app.controller;
 
-import app.dto.external.MovieTMDBDTO;
 import app.entity.Movie;
 import app.service.GenreService;
 import app.service.MovieService;
@@ -14,26 +13,39 @@ import java.util.Map;
 public class MovieController {
 
     // Attributes
-    private final MovieService movieService; // Internal
-    private final MovieTMDBService movieTMDBService; // External
-    private final GenreService genreService; // Internal
-    private final GenreTMDBService genreTMDBService;
-    private final GenreSyncService genreSyncService; // Sync
+    private final MovieService movieService;            // Internal
+    private final MovieTMDBService movieTMDBService;    // External
+    private final GenreService genreService;            // Internal
+    private final GenreTMDBService genreTMDBService;    // External
+    private final GenreSyncService genreSyncService;    // Sync
 
     // _______________________________________________
 
     public MovieController(EntityManager em) {
-        this.movieTMDBService = new MovieTMDBService();
-        this.movieService = new MovieService(em);
+
+        // Sync (Cache)
         this.genreService = new GenreService(em);
+        this.genreSyncService = new GenreSyncService(this.genreService);
+
+        // External Services
+        this.movieTMDBService = new MovieTMDBService();
         this.genreTMDBService = new GenreTMDBService();
-        this.genreSyncService = new GenreSyncService(this.genreService, this.genreTMDBService);
+
+        // Internal Services
+        this.movieService = new MovieService(em, this.genreSyncService);
+
     }
 
     // _______________________________________________
 
-    public void getDanishMoviesByRelease() {
-        movieService.syncDanishMoviesFromApi(5L);
+    public void getDanishMoviesByRelease(Long year) {
+        movieService.syncDanishMoviesFromApi(year);
+    }
+
+    // _______________________________________________
+
+    public void deleteAllMovies() {
+        movieService.deleteAll();
     }
 
     // _______________________________________________
