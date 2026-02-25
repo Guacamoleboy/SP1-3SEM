@@ -1,5 +1,6 @@
 package app.dao;
 
+import app.ASETUPTest;
 import app.entity.User;
 import app.entity.Role;
 import app.enums.RoleEnum;
@@ -7,7 +8,7 @@ import org.junit.jupiter.api.*;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-class EntityManagerDAOTest extends ADAOTest {
+class EntityManagerDAOTest extends ASETUPTest {
 
     // Usage reference:
     // https://github.com/Guacamoleboy/3-Semester-Friday/blob/main/backend/src/test/java/dk/project/dao/EntityManagerDAOTest.java
