@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.List;
 
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -46,7 +47,7 @@ public class MovieTMDBDTO {
     // TESTED: NO
     // BY: N/A
 
-    private Long id;
+    private Integer id;
 
     // @OneToOne relations so no List needed
     @JsonUnwrapped
@@ -62,5 +63,6 @@ public class MovieTMDBDTO {
     private List<CompanyTMDBDTO> productionCompanies;
     @JsonProperty("belongs_to_collection")
     private CollectionTMDBDTO collection;
-
+    @JsonProperty("genre_ids")
+    private List<Integer> genreIds;
 }

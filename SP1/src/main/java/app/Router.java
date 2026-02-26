@@ -27,13 +27,13 @@ public class Router {
             //
             GenreController genreController = new GenreController(em);
             genreController.downloadGenresFromTMDB();
-            Genre genreTest = genreController.getGenreById(28L);
+            Genre genreTest = genreController.getGenreById(28);
             System.out.println("\nGenre: " + genreTest.getGenreName());
 
             // MOVIE
             //
             MovieController movieController = new MovieController(em);
-            Long clientReturn = 5L;
+            Integer clientReturn = 5;
             movieController.getDanishMoviesByRelease(clientReturn);
             // movieController.deleteAllMovies();
 

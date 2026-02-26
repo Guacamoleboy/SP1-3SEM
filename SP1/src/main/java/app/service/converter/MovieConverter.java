@@ -67,18 +67,29 @@ public class MovieConverter {
 
         // Genres – altid en tom liste, aldrig null
         List<Genre> genres = new ArrayList<>();
-        if (dto.getGenres() != null && genreSyncService != null) {
-            genres = dto.getGenres().stream()
-                    .map(g -> {
-                        Genre cached = genreSyncService.getById(g.getId());
-                        if (cached == null) {
-                            System.err.println("Genre med id " + g.getId() + " findes ikke i cache/DB!");
-                        }
-                        return cached;
-                    })
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+
+        if (genreSyncService != null) {
+            // Case A: full objects (movie details endpoint)
+            if (dto.getGenres() != null && !dto.getGenres().isEmpty()) {
+                genres = dto.getGenres().stream()
+                        .map(g -> genreSyncService.getById(g.getId()))
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
+            }
+            // Case B: discover/search endpoints (genre_ids)
+            else if (dto.getGenreIds() != null && !dto.getGenreIds().isEmpty()) {
+                genres = dto.getGenreIds().stream()
+                        .map(genreSyncService::getById)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
+            }
+            if (dto.getGenreIds() != null) {
+                System.out.println("Movie " + dto.getId() + " genreIds=" + dto.getGenreIds() + " mappedGenres=" + genres.size());
+            } else {
+                System.out.println("Movie " + dto.getId() + " genreIds=null mappedGenres=" + genres.size());
+            }
         }
+
 
         return Movie.builder()
                 .id(dto.getId())

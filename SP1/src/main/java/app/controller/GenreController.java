@@ -36,13 +36,13 @@ public class GenreController {
 
     // __________________________________________________________
 
-    public Map<Long, Genre> getAllGenres() {
+    public Map<Integer, Genre> getAllGenres() {
         return genreSyncService.getAllGenres();
     }
 
     // __________________________________________________________
 
-    public Genre getGenreById(Long id) {
+    public Genre getGenreById(Integer id) {
         return genreSyncService.getById(id);
     }
 

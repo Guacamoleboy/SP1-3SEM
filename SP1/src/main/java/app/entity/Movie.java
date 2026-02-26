@@ -26,7 +26,7 @@ public class Movie {
 
     @Id
     @Column(name ="id", unique = true)
-    private Long id;
+    private Integer id;
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "movies_genres",                                                         // New movie table

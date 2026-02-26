@@ -51,7 +51,7 @@ public class MovieInfo {
     private Integer budget;
 
     @Column(name = "tmdb_id", unique = true, nullable = false)
-    private Long tmdbId;
+    private Integer tmdbId;
 
     @Column(name = "run_time")
     private Integer runTime;

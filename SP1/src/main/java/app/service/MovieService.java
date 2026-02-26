@@ -84,7 +84,7 @@ public class MovieService extends EntityManagerService<Movie> {
     //
     // Should be able to get movies a specific actor has been part of
 
-    public List<Movie> sortMoviesByActor(Long actorId) {
+    public List<Movie> sortMoviesByActor(Integer actorId) {
 
         // Pre-validation
         if (actorId == null || actorId <= 0L) {
@@ -101,7 +101,7 @@ public class MovieService extends EntityManagerService<Movie> {
 
     // _____________________________________________
 
-    public List<Movie> sortMoviesByCrew(Long crewId) {
+    public List<Movie> sortMoviesByCrew(Integer crewId) {
         // Pre-validation
         if (crewId == null || crewId <= 0L) {
             throw new IllegalArgumentException("Crew ID must be a positive number and cannot be null.");
@@ -121,7 +121,7 @@ public class MovieService extends EntityManagerService<Movie> {
     //
     // Should be able to get movies a director has directed
 
-    public List<Movie> getMoviesByDirector(Long crewId) {
+    public List<Movie> getMoviesByDirector(Integer crewId) {
         // Pre-validation
         if (crewId == null || crewId <= 0L) {
             throw new IllegalArgumentException("Crew ID must be a positive number.");
@@ -138,7 +138,7 @@ public class MovieService extends EntityManagerService<Movie> {
 
     // _____________________________________________
 
-    public void syncDanishMoviesFromApi(Long years) {
+    public void syncDanishMoviesFromApi(Integer years) {
         MoviePageTMDBDTO firstPage = movieTMDBService.getDanishMoviesByRelease(years, 1).join();
 
         if (firstPage == null || firstPage.getResults() == null) {
@@ -182,7 +182,7 @@ public class MovieService extends EntityManagerService<Movie> {
 
         List<Movie> apiMovies = MovieConverter.toEntityList(apiDtos, genreSyncService);
 
-        List<Long> apiIds = new ArrayList<>();
+        List<Integer> apiIds = new ArrayList<>();
         for (Movie m : apiMovies) {
             apiIds.add(m.getId());
         }

@@ -38,7 +38,7 @@ public class MovieController {
 
     // _______________________________________________
 
-    public void getDanishMoviesByRelease(Long year) {
+    public void getDanishMoviesByRelease(Integer year) {
         movieService.syncDanishMoviesFromApi(year);
     }
 
@@ -56,13 +56,13 @@ public class MovieController {
 
     // _______________________________________________
 
-    public List<Movie> getMoviesByActor(Long actorId) {
+    public List<Movie> getMoviesByActor(Integer actorId) {
         return movieService.sortMoviesByActor(actorId);
     }
 
     // _______________________________________________
 
-    public List<Movie> getMoviesByDirector(Long directorId) {
+    public List<Movie> getMoviesByDirector(Integer directorId) {
         return movieService.getMoviesByDirector(directorId);
     }
 
