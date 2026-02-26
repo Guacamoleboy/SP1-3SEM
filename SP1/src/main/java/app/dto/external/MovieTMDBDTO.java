@@ -62,5 +62,7 @@ public class MovieTMDBDTO {
     private List<CompanyTMDBDTO> productionCompanies;
     @JsonProperty("belongs_to_collection")
     private CollectionTMDBDTO collection;
+    @JsonProperty("genre_ids")
+    private List<Long> genreIds;
 
 }
