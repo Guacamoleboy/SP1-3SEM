@@ -46,23 +46,19 @@ public class MovieTMDBDTO {
     // TESTED: NO
     // BY: N/A
 
-    private Long id;
-
-    // @OneToOne relations so no List needed
+    private Integer id;
     @JsonUnwrapped
     private MovieInfoTMDBDTO movieInfo;
     @JsonUnwrapped
     private RatingTMDBDTO rating;
-
-    // Genre Object (id, name).
+    @JsonProperty("imdb_id")
+    private String imdbId;
     private List<GenreTMDBDTO> genres;
-
-    // Objects or null
     @JsonProperty("production_companies")
     private List<CompanyTMDBDTO> productionCompanies;
     @JsonProperty("belongs_to_collection")
     private CollectionTMDBDTO collection;
     @JsonProperty("genre_ids")
-    private List<Long> genreIds;
+    private List<Integer> genreIds;
 
 }

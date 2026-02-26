@@ -23,7 +23,7 @@ public class MovieCreditsTMDBDTO {
     // https://developer.themoviedb.org/reference/movie-credits
 
     // Attributes
-    private Long movieId;
+    private Integer movieId;
     private List<CastTMDBDTO> cast;
     private List<CrewTMDBDTO> crew;
 

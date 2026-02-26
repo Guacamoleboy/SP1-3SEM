@@ -21,7 +21,7 @@ public class Collection {
     // Attributes
     @Id
     @Column(name = "id", unique = true, nullable = false)
-    private Long id;
+    private Integer id;
 
     @ManyToMany
     @JoinTable(name = "collection_genres",                                     // Creating new DB Table

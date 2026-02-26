@@ -39,7 +39,7 @@ public class UserResponseDTO {
     @JsonProperty("role_description")
     private String roleDescription;
     @JsonProperty("company_id")
-    private Long companyId;
+    private Integer companyId;
     @JsonProperty("company_name")
     private String companyName;
     @JsonProperty("created_at")
@@ -55,10 +55,6 @@ public class UserResponseDTO {
         this.email = user.getEmailHash();
         this.roleName = user.getRole().getRoleEnum().name();
         this.roleDescription = user.getRole().getRoleEnum().getDescription();
-        if (user.getCompany() != null) {
-            this.companyId = user.getCompany().getId();
-            this.companyName = user.getCompany().getName();
-        }
         this.createdAt = user.getCreatedAt();
         this.lastLogin = user.getLastLogin();
     }

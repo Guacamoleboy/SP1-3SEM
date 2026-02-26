@@ -28,9 +28,6 @@ public class User {
     @Column(name = "id", nullable = false, unique = true)
     private UUID id;
 
-    @OneToOne(mappedBy = "user")
-    private Company company;
-
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 

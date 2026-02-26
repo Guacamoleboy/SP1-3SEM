@@ -17,7 +17,7 @@ public class Genre {
     // Attributes
     @Id
     @Column(name = "id", unique = true)
-    private Long id;
+    private Integer id;
 
     @Column(name = "name", unique = true)
     private String genreName;

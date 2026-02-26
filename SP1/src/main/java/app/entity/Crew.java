@@ -24,7 +24,7 @@ public class Crew {
 
     @Id
     @Column(name = "id", unique = true, nullable = false)
-    private Long id;
+    private Integer id;
     private Integer gender;
     private String department;
     private String job;

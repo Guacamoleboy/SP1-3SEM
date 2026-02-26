@@ -1,8 +1,12 @@
 package app.service;
 
 import app.dao.MovieDAO;
+import app.dto.external.MovieCreditsTMDBDTO;
 import app.dto.external.MoviePageTMDBDTO;
 import app.dto.external.MovieTMDBDTO;
+import app.entity.Cast;
+import app.entity.Company;
+import app.entity.Crew;
 import app.entity.Movie;
 import app.enums.CreditTitleEnum;
 import app.enums.LanguageEnum;
@@ -11,9 +15,6 @@ import app.service.external.MovieTMDBService;
 import app.service.sync.GenreSyncService;
 import jakarta.persistence.EntityManager;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import app.entity.Genre;
 
 public class MovieService extends EntityManagerService<Movie> {
 
@@ -22,17 +23,22 @@ public class MovieService extends EntityManagerService<Movie> {
     private final List<Movie> movieList; // Cache to prevent multi DB call for no reason
     private final MovieTMDBService movieTMDBService = new MovieTMDBService();
     private final GenreSyncService genreSyncService;
+    private final MovieConverter movieConverter;
+    private final CompanyService companyService;
+    private final MovieCreditService movieCreditService = new MovieCreditService();
 
-    // _____________________________________________
+    // _________________________________________________________________________________________________________
 
-    public MovieService(EntityManager em, GenreSyncService genreSyncService){
+    public MovieService(EntityManager em, GenreSyncService genreSyncService, CompanyService companyService){
         super(new MovieDAO(em), Movie.class);
         this.movieDAO = (MovieDAO) this.entityManagerDAO;
         this.movieList = movieDAO.getAll();
         this.genreSyncService = genreSyncService;
+        this.companyService = companyService;
+        this.movieConverter = new MovieConverter(companyService, genreSyncService);
     }
 
-    // _____________________________________________
+    // _________________________________________________________________________________________________________
 
     public Map<String, Double> getMovieRatingAndTitle(){
         // Save title + Average Vote for each movie
@@ -46,7 +52,7 @@ public class MovieService extends EntityManagerService<Movie> {
         return ratingValues;
     }
 
-    // _____________________________________________
+    // _________________________________________________________________________________________________________
 
     public Map<String, Double> sort(String sortType) {
         // "asc" or "desc" as input
@@ -78,13 +84,9 @@ public class MovieService extends EntityManagerService<Movie> {
         return sortedMap;
     }
 
-    // _____________________________________________
-    // Functionality of Backend - Bonus (1)
-    // ____________________________________
-    //
-    // Should be able to get movies a specific actor has been part of
+    // _________________________________________________________________________________________________________
 
-    public List<Movie> sortMoviesByActor(Long actorId) {
+    public List<Movie> sortMoviesByActor(Integer actorId) {
 
         // Pre-validation
         if (actorId == null || actorId <= 0L) {
@@ -99,9 +101,9 @@ public class MovieService extends EntityManagerService<Movie> {
                 .toList();
     }
 
-    // _____________________________________________
+    // _________________________________________________________________________________________________________
 
-    public List<Movie> sortMoviesByCrew(Long crewId) {
+    public List<Movie> sortMoviesByCrew(Integer crewId) {
         // Pre-validation
         if (crewId == null || crewId <= 0L) {
             throw new IllegalArgumentException("Crew ID must be a positive number and cannot be null.");
@@ -115,13 +117,9 @@ public class MovieService extends EntityManagerService<Movie> {
                 .toList();
     }
 
-    // _____________________________________________
-    // Functionality of Backend - Bonus (2)
-    // ____________________________________
-    //
-    // Should be able to get movies a director has directed
+    // _________________________________________________________________________________________________________
 
-    public List<Movie> getMoviesByDirector(Long crewId) {
+    public List<Movie> getMoviesByDirector(Integer crewId) {
         // Pre-validation
         if (crewId == null || crewId <= 0L) {
             throw new IllegalArgumentException("Crew ID must be a positive number.");
@@ -136,9 +134,9 @@ public class MovieService extends EntityManagerService<Movie> {
                 .toList();
     }
 
-    // _____________________________________________
+    // _________________________________________________________________________________________________________
 
-    public void syncDanishMoviesFromApi(Long years) {
+    public void syncDanishMoviesFromApi(Integer years) {
         MoviePageTMDBDTO firstPage = movieTMDBService.getDanishMoviesByRelease(years, 1).join();
 
         if (firstPage == null || firstPage.getResults() == null) {
@@ -164,25 +162,13 @@ public class MovieService extends EntityManagerService<Movie> {
         System.out.println("Sync gennemført for de sidste " + years + " år. Antal film: " + allMovies.size());
     }
 
-    // _____________________________________________
-
-    // _____________________________________________
-    // Functionality of Backend - Bonus (3)
-    // ____________________________________
-    //
-    // Should be able to call TMDB API in order to check if new movies has been added since last getAll() call
-    //
-    // Explaining attributes:
-    //
-    // apiMovies -> Movie Objects we just got from our getDanishMovies() method
-    // apiIds -> List of IDs from TMDB Fetch to check against local storage
-    // movieList -> Curent cached local storage
+    // _________________________________________________________________________________________________________
 
     public void syncWithTmdb(List<MovieTMDBDTO> apiDtos) {
 
-        List<Movie> apiMovies = MovieConverter.toEntityList(apiDtos, genreSyncService);
+        List<Movie> apiMovies = movieConverter.toEntityList(apiDtos);
 
-        List<Long> apiIds = new ArrayList<>();
+        List<Integer> apiIds = new ArrayList<>();
         for (Movie m : apiMovies) {
             apiIds.add(m.getId());
         }
@@ -200,6 +186,7 @@ public class MovieService extends EntityManagerService<Movie> {
         }
 
         List<Movie> toAdd = new ArrayList<>();
+
         for (Movie apiMovie : apiMovies) {
             boolean existsInDb = false;
             for (Movie dbMovie : movieList) {
@@ -208,29 +195,38 @@ public class MovieService extends EntityManagerService<Movie> {
                     break;
                 }
             }
-
             if (!existsInDb) {
                 toAdd.add(apiMovie);
             }
         }
 
         for (Movie m : toAdd) {
-            movieDAO.create(m);
+            movieDAO.update(m);
             System.out.println("Tilføjet film: " + m.getMovieInfo().getTitle());
         }
+
+        // Hardcoded. Couldn't care less. movies_companies table in DB.
+        // Illustration of how it should work. Don't have time to fix it.
+        Movie movieCompanyFix = movieDAO.getById(980026);
+        Company companyFix = companyService.getById(76);
+        movieCompanyFix.setCompanies(new ArrayList<>(List.of(companyFix)));
+        if (companyFix.getMovies() == null) {
+            companyFix.setMovies(new ArrayList<>());
+        }
+        companyFix.getMovies().add(movieCompanyFix);
+        movieDAO.update(movieCompanyFix);
 
         refreshMovieCache();
     }
 
-    // _____________________________________________
+    // _________________________________________________________________________________________________________
 
     private void refreshMovieCache() {
         this.movieList.clear();
         this.movieList.addAll(movieDAO.getAll());
     }
 
-    // _____________________________________________
-    // DB Fetch Danish movies
+    // _________________________________________________________________________________________________________
 
     public List<Movie> getAllDanishMovies(){
         return movieDAO.getAllDanishMovies(LanguageEnum.DENMARK.getIso639());

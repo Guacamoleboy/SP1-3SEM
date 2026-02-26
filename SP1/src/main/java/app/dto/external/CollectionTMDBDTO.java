@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
 
 @Data
@@ -24,7 +23,7 @@ public class CollectionTMDBDTO {
     // https://developer.themoviedb.org/reference/collection-details
 
     // Attributes
-    private Long id;
+    private Integer id;
     private String name;
     @JsonProperty("original_language")
     private String originalLanguage;
@@ -43,7 +42,7 @@ public class CollectionTMDBDTO {
     @NoArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Part {
-        private Long id;
+        private Integer id;
         private String name;
     }
 

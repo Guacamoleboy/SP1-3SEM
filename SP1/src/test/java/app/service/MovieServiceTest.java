@@ -34,9 +34,10 @@ class MovieServiceTest {
         em.clear();
 
         GenreService genreService = new GenreService(em);
+        CompanyService companyService = new CompanyService(em);
         GenreSyncService genreSyncService = new GenreSyncService(genreService);
 
-        movieService = new MovieService(em, genreSyncService);
+        movieService = new MovieService(em, genreSyncService, companyService);
     }
 
     // ______________________________________________
@@ -62,7 +63,7 @@ class MovieServiceTest {
 
     // --------------------------------------------------
 
-    private void createMovie(Long id, String title, Double ratingValue) {
+    private void createMovie(Integer id, String title, Double ratingValue) {
 
         Rating rating = new Rating();
         rating.setVoteAverage(ratingValue);
@@ -70,7 +71,7 @@ class MovieServiceTest {
         MovieInfo movieInfo = new MovieInfo();
         movieInfo.setTitle(title);
         movieInfo.setOriginalLanguage(LanguageEnum.DENMARK);
-        movieInfo.setTmdbId(id);
+        movieInfo.setImdbId("200");
         movieInfo.setReleaseDate(LocalDate.now());
 
         Movie movie = new Movie();
@@ -86,7 +87,7 @@ class MovieServiceTest {
     @Test
     void getMovieRatingAndTitle() {
 
-        createMovie(1L, "Test Movie", 5.0);
+        createMovie(1, "Test Movie", 5.0);
         em.flush();
 
         Map<String, Double> result = movieService.getMovieRatingAndTitle();
@@ -100,8 +101,8 @@ class MovieServiceTest {
     @Test
     void sortAscending() {
 
-        createMovie(1L, "Movie A", 1.0);
-        createMovie(2L, "Movie B", 1.1);
+        createMovie(1, "Movie A", 1.0);
+        createMovie(2, "Movie B", 1.1);
         em.flush();
 
         Map<String, Double> sorted = movieService.sort("asc");
@@ -115,8 +116,8 @@ class MovieServiceTest {
     @Test
     void sortDescending() {
 
-        createMovie(1L, "Movie A", 1.0);
-        createMovie(2L, "Movie B", 1.1);
+        createMovie(1, "Movie A", 1.0);
+        createMovie(2, "Movie B", 1.1);
         em.flush();
 
         Map<String, Double> sorted = movieService.sort("desc");
@@ -131,25 +132,25 @@ class MovieServiceTest {
     void sortMoviesByActor() {
 
         Cast actor = new Cast();
-        actor.setId(10L);
+        actor.setId(10);
         actor.setName("Actor Test");
 
         MovieInfo info = new MovieInfo();
         info.setTitle("Actor Movie");
         info.setOriginalLanguage(LanguageEnum.DENMARK);
-        info.setTmdbId(200L);
+        info.setImdbId("200");
         info.setReleaseDate(LocalDate.now());
         info.setCasts(List.of(actor));
 
         Movie movie = new Movie();
-        movie.setId(3L);
+        movie.setId(3);
         movie.setMovieInfo(info);
 
         em.persist(actor);
         em.persist(movie);
         em.flush();
 
-        List<Movie> result = movieService.sortMoviesByActor(10L);
+        List<Movie> result = movieService.sortMoviesByActor(10);
 
         assertEquals(1, result.size());
     }
@@ -160,26 +161,26 @@ class MovieServiceTest {
     void sortMoviesByCrew() {
 
         Crew crew = new Crew();
-        crew.setId(15L);
+        crew.setId(15);
         crew.setName("Crew Test");
         crew.setJob("Producer");
 
         MovieInfo info = new MovieInfo();
         info.setTitle("Crew Movie");
         info.setOriginalLanguage(LanguageEnum.DENMARK);
-        info.setTmdbId(250L);
+        info.setImdbId("250");
         info.setReleaseDate(LocalDate.now());
         info.setCrews(List.of(crew));
 
         Movie movie = new Movie();
-        movie.setId(5L);
+        movie.setId(5);
         movie.setMovieInfo(info);
 
         em.persist(crew);
         em.persist(movie);
         em.flush();
 
-        List<Movie> result = movieService.sortMoviesByCrew(15L);
+        List<Movie> result = movieService.sortMoviesByCrew(15);
 
         assertEquals(1, result.size());
         assertEquals("Crew Movie", result.get(0).getMovieInfo().getTitle());
@@ -191,57 +192,29 @@ class MovieServiceTest {
     void getMoviesByDirector() {
 
         Crew director = new Crew();
-        director.setId(20L);
+        director.setId(20);
         director.setName("Director Test");
         director.setJob(CreditTitleEnum.DIRECTOR.name());
 
         MovieInfo info = new MovieInfo();
         info.setTitle("Directed Movie");
         info.setOriginalLanguage(LanguageEnum.DENMARK);
-        info.setTmdbId(300L);
+        info.setImdbId("300");
         info.setReleaseDate(LocalDate.now());
         info.setCrews(List.of(director));
 
         Movie movie = new Movie();
-        movie.setId(6L);
+        movie.setId(6);
         movie.setMovieInfo(info);
 
         em.persist(director);
         em.persist(movie);
         em.flush();
 
-        List<Movie> result = movieService.getMoviesByDirector(20L);
+        List<Movie> result = movieService.getMoviesByDirector(20);
 
         assertEquals(1, result.size());
         assertEquals("Directed Movie", result.get(0).getMovieInfo().getTitle());
     }
 
-    // --------------------------------------------------
-
-    /*@Test
-    void syncWithTmdb() {
-
-        createMovie(1L, "Old Movie", 5.0);
-        em.flush();
-
-        MovieInfo newInfo = new MovieInfo();
-        newInfo.setTitle("New Movie");
-        newInfo.setOriginalLanguage(LanguageEnum.DENMARK);
-        newInfo.setTmdbId(2L);
-        newInfo.setReleaseDate(LocalDate.now());
-
-        Movie newMovie = new Movie();
-        newMovie.setId(2L);
-        newMovie.setMovieInfo(newInfo);
-
-        List<Long> apiIds = List.of(2L);
-        List<Movie> apiMovies = List.of(newMovie);
-
-        movieService.syncWithTmdb(apiIds, apiMovies);
-
-        List<Movie> allMovies = movieService.getAll();
-
-        assertEquals(1, allMovies.size());
-        assertEquals(2L, allMovies.get(0).getId());
-    }*/
 }

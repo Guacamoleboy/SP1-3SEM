@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class CrewTMDBDTO {
 
     // Attributes
-    private Long id;
+    private Integer id;
     private String name;
     private String department;
     private String job;
