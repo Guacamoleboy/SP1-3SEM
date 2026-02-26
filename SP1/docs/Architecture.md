@@ -1,13 +1,13 @@
 # Architecture of Java API Flow
 ___
 
-### ClassDTO vs ClassResponseDTO.. What's the difference?
+### ClassDTO vs ClassResponseDTO. What's the difference?
 
 In this project, request and response objects are intentionally
-separated to ensure clarity, security, and maintainability.
+separated to ensure clarity, security and maintainability.
 
 The separation into distinct packages for inbound and outbound DTOs is peak use of
-Separation of Concerns (SoC). Each Class has a single responsibility.. 
+Separation of Concerns (SoC). Each Class has a single responsibility. 
 
 Either Handle Input or Create output.
 
@@ -46,7 +46,7 @@ ___
 
 Represents outgoing traffic from the backend to the client.
 
-defines what data is exposed externally.
+Defines what data is exposed externally.
 It could contain additional fields generated or managed by the backend, such as:
 - DB / DAO generated IDs
 - Timestamps
@@ -66,9 +66,9 @@ Use Cases:
 
 ___
 
-### Thoughts process of concerns
+### Thoughts process for each concern
 
-A quick overview of what to think when sending / receiving data in general.
+A quick overview of what to think when sending or receiving data in general.
 
 ##### Controller way of thinking:
 "How do we get the data in and out?"
@@ -80,23 +80,23 @@ A quick overview of what to think when sending / receiving data in general.
 "How do we handle this data?"
 
 ##### Database / Entity way of thinking:
-"Hoes do we store this ?"
+"How do we store this?"
 
 ##### ClassDTO way of thinking:
-"What are we sending from the Client / UI ?"
+"What are we sending from the Client / UI?"
 
 ##### ClassResponseDTO way of thinking:
-"What does the client / UI need to see ?"
+"What does the client / UI need to see?"
 
-See how that makes more sense now? Bliss.
+This illustrates how each layer has a distinct and clear responsibility.
 
 ___
 
 ### Why Separation of Concerns?
 
-With seperation of each we are able to handle things like:
+With proper separation, we are able to handle things like:
 - Prevents accidental exposure of internal fields that are NOT meant to be visible in UI.
-- Client handle safety.
+- Improves client safety.
 - Makes API contracts explicit.
 - Improves long-term maintainability & stability.
 
