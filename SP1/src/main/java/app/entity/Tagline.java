@@ -17,7 +17,7 @@ public class Tagline {
     // Attributes
     @Id
     @Column(name = "id", nullable = false, unique = true)
-    private Long id;
+    private Integer id;
 
     @Column(name = "tag", nullable = false , unique = true)
     private String tag;

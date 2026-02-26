@@ -15,5 +15,12 @@ public class RatingDAO extends EntityManagerDAO<Rating> {
 
     // _______________________________________________________________
 
+    // Part of IDAO Interface. Implements these by default:
+    // ___________________
+    //
+    // create() | update() | getById() | getColumnById() | updateColumnById()
+    // existByColumn() | findEntityByColumn() | getAll() | delete() | deletebyId | deleteAll()
+
+    // _______________________________________________________________
 
 }

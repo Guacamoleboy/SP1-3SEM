@@ -17,7 +17,7 @@ public class CompanyTMDBService {
 
     // __________________________________________________________
 
-    public CompletableFuture<CompanyTMDBDTO> getCompanyById(Long companyId) {
+    public CompletableFuture<CompanyTMDBDTO> getCompanyById(Integer companyId) {
 
         // Pre-validation
         if (companyId == null) {

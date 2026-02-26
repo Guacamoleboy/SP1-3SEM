@@ -139,10 +139,13 @@ public class EntityManagerDAO<T> implements IDAO<T> {
 
     @Override
     public void deleteAll() {
-        List<T> entities = getAll();
-        for (T entity : entities) {
-            em.remove(entity);
-        }
+        executeQuery(() -> {
+            List<T> entities = getAll();
+            for (T entity : entities) {
+                em.remove(entity);
+            }
+            return null;
+        });
     }
 
     // ________________________________________________________
@@ -182,7 +185,9 @@ public class EntityManagerDAO<T> implements IDAO<T> {
     // Java 17 doesn't handle switch-case for instanceof
 
     private T findById(Object id) {
-        if (id instanceof Integer) {
+        if (id instanceof Long) {
+            return em.find(classSpecific, (Long) id);
+        } else if (id instanceof Integer) {
             return em.find(classSpecific, (Integer) id);
         } else if (id instanceof String) {
             return em.find(classSpecific, (String) id);

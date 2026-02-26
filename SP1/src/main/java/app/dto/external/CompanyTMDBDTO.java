@@ -21,7 +21,7 @@ public class CompanyTMDBDTO {
     // Docs:
     // https://developer.themoviedb.org/reference/company-details
 
-    private Long id;
+    private Integer id;
     private String name;
     @JsonProperty("logo_path")
     private String logoPath;

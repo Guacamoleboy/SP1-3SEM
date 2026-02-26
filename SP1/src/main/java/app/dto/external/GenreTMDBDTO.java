@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class GenreTMDBDTO {
 
     // Attributes
-    private Long id;
+    private Integer id;
     private String name;
 
 }

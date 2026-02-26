@@ -1,15 +1,16 @@
 package app;
 
+import app.config.PoolConfig;
+
 public class Main {
 
     // Attributes
 
-    // ______________________________________________
+    // ________________________________________________
 
     public static void main(String[] args) {
-
-        // Empty right now.
-
+        new Router().run();
+        PoolConfig.getExecutor().shutdown();
     }
 
 }

@@ -3,7 +3,7 @@
 # SP1 - TMDB - Movie Backend
 **School Project**
 
-[![TMDB Reference Docs](https://img.shields.io/badge/Go%20to%20TMDC%20Docs-ffffff?style=for-the-badge&color=33B6DF)](http://developer.themoviedb.org/reference/getting-started)
+[![TMDB Reference Docs](https://img.shields.io/badge/Go%20to%20TMDB%20Docs-ffffff?style=for-the-badge&color=33B6DF)](http://developer.themoviedb.org/reference/getting-started)
 
 </div>
 
