@@ -28,27 +28,18 @@ public class GenreService extends EntityManagerService<Genre> {
 
     // ____________________________________________________________
 
-    public void getGenresFromTMDB() {
-
+    public void getAllGenresFromTMDB() {
         List<GenreTMDBDTO> genreDTOs = genreTMDBService.getAllGenres().join();
-
-        if (genreDTOs == null || genreDTOs.isEmpty()) {
-            System.out.println("No genres found from TMDB endpoint.");
-            return;
-        }
-
         for (GenreTMDBDTO dto : genreDTOs) {
             if (!existByColumn(dto.getId(), "id")) {
-                Genre genre = new Genre();
-                genre.setId(dto.getId());
-                genre.setGenreName(dto.getName());
-                create(genre);
-                System.out.println("Genre tilføjet: " + dto.getName());
+                Genre genre = Genre.builder()
+                        .id(dto.getId())
+                        .genreName(dto.getName())
+                        .build();
+                genreDAO.create(genre);
             }
         }
-
-        System.out.println("Genres gemt i DB: " + genreDTOs.size());
-
+        System.out.println("Stored " + genreDTOs.size() + " genres.");
     }
 
 }

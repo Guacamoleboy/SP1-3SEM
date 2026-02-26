@@ -139,13 +139,10 @@ public class EntityManagerDAO<T> implements IDAO<T> {
 
     @Override
     public void deleteAll() {
-        executeQuery(() -> {
-            List<T> entities = getAll();
-            for (T entity : entities) {
-                em.remove(entity);
-            }
-            return null;
-        });
+        List<T> entities = getAll();
+        for (T entity : entities) {
+            em.remove(entity);
+        }
     }
 
     // ________________________________________________________
