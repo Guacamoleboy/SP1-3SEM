@@ -27,7 +27,7 @@ public class MovieInfo {
     @Column(name = "adult")
     private boolean adult;
 
-    @Column(name = "backdrop_path", unique = true)
+    @Column(name = "backdrop_path")
     private String backdropPath;
 
     @Enumerated(EnumType.STRING)

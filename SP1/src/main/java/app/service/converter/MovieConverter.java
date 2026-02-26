@@ -3,21 +3,20 @@ package app.service.converter;
 import app.dto.external.MovieTMDBDTO;
 import app.entity.*;
 import app.enums.LanguageEnum;
+import app.service.sync.GenreSyncService;
+
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class MovieConverter {
 
-    // Attributes
-
-    //  __________________________________________________________________________
-
-    public static Movie toEntity(MovieTMDBDTO dto) {
-
-        // Initial validation
+    public static Movie toEntity(MovieTMDBDTO dto, GenreSyncService genreSyncService) {
         if (dto == null) return null;
 
+        // Rating
         Rating rating = null;
         if (dto.getRating() != null) {
             rating = Rating.builder()
@@ -26,12 +25,11 @@ public class MovieConverter {
                     .build();
         }
 
+        // MovieInfo
         MovieInfo movieInfo = null;
         if (dto.getMovieInfo() != null) {
-
             LanguageEnum language = null;
             String rawLang = dto.getMovieInfo().getOriginalLanguage();
-
             if (rawLang != null) {
                 if (rawLang.equalsIgnoreCase("da")) {
                     language = LanguageEnum.DENMARK;
@@ -40,18 +38,17 @@ public class MovieConverter {
                         language = LanguageEnum.valueOf(rawLang.toUpperCase());
                     } catch (IllegalArgumentException e) {
                         System.err.println("Sprog koden '" + rawLang + "' findes ikke i LanguageEnum");
-                        language = null;
                     }
                 }
             }
 
             LocalDate releaseDate = null;
-            try {
-                if (dto.getMovieInfo().getReleaseDate() != null && !dto.getMovieInfo().getReleaseDate().isEmpty()) {
+            if (dto.getMovieInfo().getReleaseDate() != null && !dto.getMovieInfo().getReleaseDate().isEmpty()) {
+                try {
                     releaseDate = LocalDate.parse(dto.getMovieInfo().getReleaseDate());
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid release date '" + dto.getMovieInfo().getReleaseDate() + "' for movie id " + dto.getId(), e);
                 }
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Invalid release date '" + dto.getMovieInfo().getReleaseDate() + "' for movie id " + dto.getId(), e);
             }
 
             movieInfo = MovieInfo.builder()
@@ -68,13 +65,18 @@ public class MovieConverter {
                     .build();
         }
 
-        List<Genre> genres = null;
-        if (dto.getGenres() != null) {
+        // Genres – altid en tom liste, aldrig null
+        List<Genre> genres = new ArrayList<>();
+        if (dto.getGenres() != null && genreSyncService != null) {
             genres = dto.getGenres().stream()
-                    .map(g -> Genre.builder()
-                            .id(g.getId())
-                            .genreName(g.getName())
-                            .build())
+                    .map(g -> {
+                        Genre cached = genreSyncService.getById(g.getId());
+                        if (cached == null) {
+                            System.err.println("Genre med id " + g.getId() + " findes ikke i cache/DB!");
+                        }
+                        return cached;
+                    })
+                    .filter(Objects::nonNull)
                     .collect(Collectors.toList());
         }
 
@@ -82,17 +84,14 @@ public class MovieConverter {
                 .id(dto.getId())
                 .movieInfo(movieInfo)
                 .rating(rating)
-                .genre(genres)
+                .genre(genres) // altid liste, aldrig null
                 .build();
     }
 
-    //  __________________________________________________________________________
-
-    public static List<Movie> toEntityList(List<MovieTMDBDTO> dtos) {
+    public static List<Movie> toEntityList(List<MovieTMDBDTO> dtos, GenreSyncService genreSyncService) {
         if (dtos == null) return List.of();
         return dtos.stream()
-                .map(MovieConverter::toEntity)
+                .map(dto -> toEntity(dto, genreSyncService))
                 .collect(Collectors.toList());
     }
-
 }

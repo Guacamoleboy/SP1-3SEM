@@ -76,7 +76,7 @@ public class MovieTMDBService {
                 + "?api_key=" + DotEnv.getTmdbKey()
                 + "&with_original_language=da"
                 + "&primary_release_date.gte=" + startDateString
-                + "&primary_release_date.lte=" + endDateString;
+                + "&primary_release_date.lte=" + endDateString
                 + "&page=" + page;
 
         // Debug (Confirmed as working)

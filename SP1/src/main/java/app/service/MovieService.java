@@ -1,12 +1,14 @@
 package app.service;
 
 import app.dao.MovieDAO;
+import app.dto.external.MoviePageTMDBDTO;
 import app.dto.external.MovieTMDBDTO;
 import app.entity.Movie;
 import app.enums.CreditTitleEnum;
 import app.enums.LanguageEnum;
 import app.service.converter.MovieConverter;
 import app.service.external.MovieTMDBService;
+import app.service.sync.GenreSyncService;
 import jakarta.persistence.EntityManager;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,13 +21,15 @@ public class MovieService extends EntityManagerService<Movie> {
     private final MovieDAO movieDAO;
     private final List<Movie> movieList; // Cache to prevent multi DB call for no reason
     private final MovieTMDBService movieTMDBService = new MovieTMDBService();
+    private final GenreSyncService genreSyncService;
 
     // _____________________________________________
 
-    public MovieService(EntityManager em){
+    public MovieService(EntityManager em, GenreSyncService genreSyncService){
         super(new MovieDAO(em), Movie.class);
         this.movieDAO = (MovieDAO) this.entityManagerDAO;
         this.movieList = movieDAO.getAll();
+        this.genreSyncService = genreSyncService;
     }
 
     // _____________________________________________
@@ -135,48 +139,30 @@ public class MovieService extends EntityManagerService<Movie> {
     // _____________________________________________
 
     public void syncDanishMoviesFromApi(Long years) {
-        movieTMDBService.getDanishMoviesByRelease(years, 1)
-                .thenAccept(pageDTO -> {
-                    syncWithTmdb(pageDTO.getResults());
-                    System.out.println("Sync gennemført for de sidste " + years + " år.");
-                })
-                .exceptionally(ex -> {
-                    System.err.println("Fejl under sync: " + ex.getMessage());
-                    return null;
-                });
-    }
+        MoviePageTMDBDTO firstPage = movieTMDBService.getDanishMoviesByRelease(years, 1).join();
 
-    // _____________________________________________
-
-    public void fetchAndSaveDanishMovies(Long years, int page) {
-        movieTMDBService.getDanishMoviesByRelease(years, page)
-                .thenAccept(pageDTO -> {
-                    List<MovieTMDBDTO> dtos = pageDTO.getResults();
-                    if (dtos != null && !dtos.isEmpty()) {
-                        syncWithTmdb(dtos);
-                        System.out.println("Sync fuldført for " + dtos.size() + " film.");
-                    }
-                })
-                .exceptionally(ex -> {
-                    System.err.println("Fejl i sync flow: " + ex.getMessage());
-                    return null;
-                });
-    }
-
-    // _____________________________________________
-
-    /*
-    public void fetchMultiplePages(Long years, int totalPages) {
-        for (int i = 1; i <= totalPages; i++) {
-            final int currentPage = i;
-            movieTMDBService.getDanishMoviesByRelease(years, currentPage)
-                    .thenAccept(pageDTO -> {
-                        syncWithTmdb(pageDTO.getResults());
-                        System.out.println("Hentet side " + currentPage);
-                    });
+        if (firstPage == null || firstPage.getResults() == null) {
+            System.out.println("Ingen film fundet fra TMDB.");
+            return;
         }
+
+        List<MovieTMDBDTO> allMovies = new ArrayList<>(firstPage.getResults());
+        int totalPages = firstPage.getTotalPages() != null ? firstPage.getTotalPages() : 1;
+        for (int page = 2; page <= totalPages; page++) {
+            try {
+                MoviePageTMDBDTO pageDTO = movieTMDBService.getDanishMoviesByRelease(years, page).join();
+                if (pageDTO != null && pageDTO.getResults() != null) {
+                    allMovies.addAll(pageDTO.getResults());
+                }
+            } catch (Exception ex) {
+                System.err.println("Fejl under hentning af side " + page + ": " + ex.getMessage());
+            }
+        }
+
+        syncWithTmdb(allMovies);
+
+        System.out.println("Sync gennemført for de sidste " + years + " år. Antal film: " + allMovies.size());
     }
-    */
 
     // _____________________________________________
 
@@ -194,7 +180,7 @@ public class MovieService extends EntityManagerService<Movie> {
 
     public void syncWithTmdb(List<MovieTMDBDTO> apiDtos) {
 
-        List<Movie> apiMovies = MovieConverter.toEntityList(apiDtos);
+        List<Movie> apiMovies = MovieConverter.toEntityList(apiDtos, genreSyncService);
 
         List<Long> apiIds = new ArrayList<>();
         for (Movie m : apiMovies) {
@@ -210,6 +196,7 @@ public class MovieService extends EntityManagerService<Movie> {
 
         for (Movie m : toRemove) {
             movieDAO.delete(m);
+            System.out.println("Slettet film: " + m.getMovieInfo().getTitle());
         }
 
         List<Movie> toAdd = new ArrayList<>();
@@ -229,6 +216,7 @@ public class MovieService extends EntityManagerService<Movie> {
 
         for (Movie m : toAdd) {
             movieDAO.create(m);
+            System.out.println("Tilføjet film: " + m.getMovieInfo().getTitle());
         }
 
         refreshMovieCache();

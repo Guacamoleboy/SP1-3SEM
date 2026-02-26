@@ -4,15 +4,13 @@ import app.config.HibernateConfig;
 import app.entity.*;
 import app.enums.CreditTitleEnum;
 import app.enums.LanguageEnum;
+import app.service.sync.GenreSyncService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.*;
-
 import java.time.LocalDate;
 import java.util.*;
-
 import static org.junit.jupiter.api.Assertions.*;
-
 
 class MovieServiceTest {
 
@@ -34,6 +32,11 @@ class MovieServiceTest {
         em = emf.createEntityManager();
         em.getTransaction().begin();
         em.clear();
+
+        GenreService genreService = new GenreService(em);
+        GenreSyncService genreSyncService = new GenreSyncService(genreService);
+
+        movieService = new MovieService(em, genreSyncService);
     }
 
     // ______________________________________________
@@ -86,8 +89,6 @@ class MovieServiceTest {
         createMovie(1L, "Test Movie", 5.0);
         em.flush();
 
-        movieService = new MovieService(em);
-
         Map<String, Double> result = movieService.getMovieRatingAndTitle();
 
         assertEquals(1, result.size());
@@ -103,8 +104,6 @@ class MovieServiceTest {
         createMovie(2L, "Movie B", 1.1);
         em.flush();
 
-        movieService = new MovieService(em);
-
         Map<String, Double> sorted = movieService.sort("asc");
 
         Double firstValue = sorted.values().iterator().next();
@@ -119,8 +118,6 @@ class MovieServiceTest {
         createMovie(1L, "Movie A", 1.0);
         createMovie(2L, "Movie B", 1.1);
         em.flush();
-
-        movieService = new MovieService(em);
 
         Map<String, Double> sorted = movieService.sort("desc");
 
@@ -152,8 +149,6 @@ class MovieServiceTest {
         em.persist(movie);
         em.flush();
 
-        movieService = new MovieService(em);
-
         List<Movie> result = movieService.sortMoviesByActor(10L);
 
         assertEquals(1, result.size());
@@ -183,8 +178,6 @@ class MovieServiceTest {
         em.persist(crew);
         em.persist(movie);
         em.flush();
-
-        movieService = new MovieService(em);
 
         List<Movie> result = movieService.sortMoviesByCrew(15L);
 
@@ -217,8 +210,6 @@ class MovieServiceTest {
         em.persist(movie);
         em.flush();
 
-        movieService = new MovieService(em);
-
         List<Movie> result = movieService.getMoviesByDirector(20L);
 
         assertEquals(1, result.size());
@@ -232,8 +223,6 @@ class MovieServiceTest {
 
         createMovie(1L, "Old Movie", 5.0);
         em.flush();
-
-        movieService = new MovieService(em);
 
         MovieInfo newInfo = new MovieInfo();
         newInfo.setTitle("New Movie");
