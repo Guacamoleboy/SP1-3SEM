@@ -1,5 +1,7 @@
 package app;
 
+import app.config.PoolConfig;
+
 public class Main {
 
     // Attributes
@@ -8,6 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
         new Router().run();
+        PoolConfig.getExecutor().shutdown();
     }
 
 }

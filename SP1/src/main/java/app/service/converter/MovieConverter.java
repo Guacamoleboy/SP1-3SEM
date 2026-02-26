@@ -67,19 +67,20 @@ public class MovieConverter {
 
         // Genres – altid en tom liste, aldrig null
         List<Genre> genres = new ArrayList<>();
-        if (dto.getGenres() != null && genreSyncService != null) {
-            genres = dto.getGenres().stream()
-                    .map(g -> {
-                        Genre cached = genreSyncService.getById(g.getId());
-                        if (cached == null) {
-                            System.err.println("Genre med id " + g.getId() + " findes ikke i cache/DB!");
-                        }
-                        return cached;
-                    })
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+
+        if (dto.getGenreIds() != null && genreSyncService != null) {
+            for (Long genreId : dto.getGenreIds()) {
+                Genre cached = genreSyncService.getById(genreId);
+                if (cached != null) {
+                    genres.add(cached);
+                } else {
+                    System.err.println("Genre med id " + genreId + " findes ikke i cache/DB!");
+                }
+            }
         }
 
+        //System.out.println(genres.size());
+        
         return Movie.builder()
                 .id(dto.getId())
                 .movieInfo(movieInfo)
