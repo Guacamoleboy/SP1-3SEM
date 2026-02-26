@@ -1,6 +1,7 @@
 package app.controller;
 
 import app.entity.Movie;
+import app.service.CompanyService;
 import app.service.GenreService;
 import app.service.MovieService;
 import app.service.external.GenreTMDBService;
@@ -13,11 +14,12 @@ import java.util.Map;
 public class MovieController {
 
     // Attributes
-    private final MovieService movieService;            // Internal
-    private final MovieTMDBService movieTMDBService;    // External
-    private final GenreService genreService;            // Internal
-    private final GenreTMDBService genreTMDBService;    // External
-    private final GenreSyncService genreSyncService;    // Sync
+    private final MovieService movieService;
+    private final MovieTMDBService movieTMDBService;
+    private final GenreService genreService;
+    private final GenreTMDBService genreTMDBService;
+    private final GenreSyncService genreSyncService;
+    private final CompanyService companyService;
 
     // _______________________________________________
 
@@ -26,19 +28,16 @@ public class MovieController {
         // Sync (Cache)
         this.genreService = new GenreService(em);
         this.genreSyncService = new GenreSyncService(this.genreService);
-
-        // External Services
         this.movieTMDBService = new MovieTMDBService();
         this.genreTMDBService = new GenreTMDBService();
-
-        // Internal Services
-        this.movieService = new MovieService(em, this.genreSyncService);
+        this.companyService = new CompanyService(em);
+        this.movieService = new MovieService(em, this.genreSyncService, this.companyService);
 
     }
 
     // _______________________________________________
 
-    public void getDanishMoviesByRelease(Long year) {
+    public void getDanishMoviesByRelease(Integer year) {
         movieService.syncDanishMoviesFromApi(year);
     }
 
@@ -56,13 +55,13 @@ public class MovieController {
 
     // _______________________________________________
 
-    public List<Movie> getMoviesByActor(Long actorId) {
+    public List<Movie> getMoviesByActor(Integer actorId) {
         return movieService.sortMoviesByActor(actorId);
     }
 
     // _______________________________________________
 
-    public List<Movie> getMoviesByDirector(Long directorId) {
+    public List<Movie> getMoviesByDirector(Integer directorId) {
         return movieService.getMoviesByDirector(directorId);
     }
 

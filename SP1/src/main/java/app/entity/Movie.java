@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -24,34 +23,33 @@ public class Movie {
     // One (Movie) One (Rating)
     // Many (Movie) Many (Company)
 
+    // DB COLUMNS
     @Id
-    @Column(name ="id", unique = true)
-    private Long id;
+    @Column(name ="id")
+    private Integer id;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "movies_genres",                                                         // New movie table
-        joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"),             // Here
-        inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id")       // There
-    )
-    private List<Genre> genre;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "movie_info_id", referencedColumnName = "id", nullable = false)
     private MovieInfo movieInfo;
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "collection_id", referencedColumnName = "id")
     private Collection collection;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "rating_id", referencedColumnName = "id")
     private Rating rating;
 
-    @ManyToMany
-    @JoinTable(name = "movie_companies",
+    // NEW TABLES FROM DATA
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "movies_genres",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    private List<Genre> genre;
+
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "movies_companies",
         joinColumns = @JoinColumn(name = "movie_id"),
-        inverseJoinColumns = @JoinColumn(name = "company_id")
-    )
+        inverseJoinColumns = @JoinColumn(name = "company_id"))
     private List<Company> companies;
 
 }

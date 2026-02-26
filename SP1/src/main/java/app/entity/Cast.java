@@ -21,7 +21,7 @@ public class Cast {
 
     // Attributes
     @Id
-    private Long id;
+    private Integer id;
     private String character;
 
     @Column(name = "cast_order")

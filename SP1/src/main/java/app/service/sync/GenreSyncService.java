@@ -12,7 +12,7 @@ public class GenreSyncService {
 
     // Attributes
     private final GenreService genreService;
-    private final Map<Long, Genre> genreCache = new ConcurrentHashMap<>();
+    private final Map<Integer, Genre> genreCache = new ConcurrentHashMap<>();
 
     // ___________________________________________________________________________
 
@@ -34,14 +34,14 @@ public class GenreSyncService {
 
     // ___________________________________________________________________________
 
-    public Genre getById(Long id) {
+    public Genre getById(Integer id) {
         fillCacheFromDB();
         return genreCache.get(id);
     }
 
     // ___________________________________________________________________________
 
-    public Map<Long, Genre> getAllGenres() {
+    public Map<Integer, Genre> getAllGenres() {
         fillCacheFromDB();
         return genreCache;
     }

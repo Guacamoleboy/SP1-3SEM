@@ -23,7 +23,7 @@ public class MovieTMDBService {
     // _______________________________________________
     // Get single movie by ID from TMDB
 
-    public CompletableFuture<MovieTMDBDTO> getMovieById(Long movieId) {
+    public CompletableFuture<MovieTMDBDTO> getMovieById(Integer movieId) {
 
         if (movieId == null) {
             return CompletableFuture.failedFuture(
@@ -66,7 +66,7 @@ public class MovieTMDBService {
     private static final String BASE_URL_DISCOVER = "https://api.themoviedb.org/3/discover/movie";
 
 
-    public CompletableFuture<MoviePageTMDBDTO> getDanishMoviesByRelease(Long years, int page) {
+    public CompletableFuture<MoviePageTMDBDTO> getDanishMoviesByRelease(Integer years, int page) {
 
         LocalDate endDate = LocalDate.now();
         String endDateString = endDate.toString();

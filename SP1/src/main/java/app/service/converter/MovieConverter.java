@@ -1,19 +1,32 @@
 package app.service.converter;
 
+import app.dto.external.CompanyTMDBDTO;
 import app.dto.external.MovieTMDBDTO;
 import app.entity.*;
 import app.enums.LanguageEnum;
+import app.service.CompanyService;
 import app.service.sync.GenreSyncService;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class MovieConverter {
 
-    public static Movie toEntity(MovieTMDBDTO dto, GenreSyncService genreSyncService) {
+    // Attributes
+    private final CompanyService companyService;
+    private final GenreSyncService genreSyncService;
+
+    // ___________________________________________________________________
+
+    public MovieConverter(CompanyService companyService, GenreSyncService genreSyncService) {
+        this.companyService = companyService;
+        this.genreSyncService = genreSyncService;
+    }
+
+    // ___________________________________________________________________
+
+    public Movie toEntity(MovieTMDBDTO dto) {
+
         if (dto == null) return null;
 
         // Rating
@@ -52,7 +65,7 @@ public class MovieConverter {
             }
 
             movieInfo = MovieInfo.builder()
-                    .tmdbId(dto.getId())
+                    .imdbId(dto.getImdbId())
                     .title(dto.getMovieInfo().getTitle())
                     .originalTitle(dto.getMovieInfo().getOriginalTitle())
                     .overview(dto.getMovieInfo().getOverview())
@@ -65,34 +78,50 @@ public class MovieConverter {
                     .build();
         }
 
-        // Genres – altid en tom liste, aldrig null
+        // Genres
         List<Genre> genres = new ArrayList<>();
-
-        if (dto.getGenreIds() != null && genreSyncService != null) {
-            for (Long genreId : dto.getGenreIds()) {
-                Genre cached = genreSyncService.getById(genreId);
-                if (cached != null) {
-                    genres.add(cached);
-                } else {
-                    System.err.println("Genre med id " + genreId + " findes ikke i cache/DB!");
+        if (dto.getGenreIds() != null) {
+            for (Integer genreId : dto.getGenreIds()) {
+                Genre genre = this.genreSyncService.getById(genreId);
+                if (genre != null) {
+                    genres.add(genre);
                 }
             }
         }
 
-        //System.out.println(genres.size());
-        
-        return Movie.builder()
+        // Companies
+        List<Company> companies = new ArrayList<>();
+        if (dto.getProductionCompanies() != null) {
+            for (CompanyTMDBDTO companyDto : dto.getProductionCompanies()) {
+                Company company = this.companyService.getById(companyDto.getId());
+                if (company != null) {
+                    companies.add(company);
+                }
+            }
+        }
+
+        // Builder
+        Movie movie =  Movie.builder()
                 .id(dto.getId())
                 .movieInfo(movieInfo)
                 .rating(rating)
-                .genre(genres) // altid liste, aldrig null
+                .genre(genres)
+                .companies(companies)
                 .build();
+
+        // Return
+        return movie;
+
     }
 
-    public static List<Movie> toEntityList(List<MovieTMDBDTO> dtos, GenreSyncService genreSyncService) {
-        if (dtos == null) return List.of();
-        return dtos.stream()
-                .map(dto -> toEntity(dto, genreSyncService))
-                .collect(Collectors.toList());
+    // __________________________________________________________________________________
+
+    public List<Movie> toEntityList(List<MovieTMDBDTO> movieTMDBDTOList) {
+        List<Movie> movies = new ArrayList<>();
+        for (MovieTMDBDTO movieTMDBDTO : movieTMDBDTOList) {
+            movies.add(toEntity(movieTMDBDTO));
+        }
+        return movies;
     }
+
 }

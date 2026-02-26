@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class CastTMDBDTO {
 
     // Attributes
-    private Long id;
+    private Integer id;
     private String name;
     private String character;
     private Integer order;

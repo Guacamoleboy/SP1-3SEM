@@ -2,6 +2,7 @@ package app.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import java.util.UUID;
 
 @Data
 public class UserDTO {
@@ -27,8 +28,8 @@ public class UserDTO {
     private String email;
     private String password;
     @JsonProperty("role_id")
-    private String roleId;
+    private UUID roleId;
     @JsonProperty("company_id")
-    private String companyId;
+    private Integer companyId;
 
 }

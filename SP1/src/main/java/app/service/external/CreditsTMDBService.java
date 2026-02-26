@@ -23,7 +23,7 @@ public class CreditsTMDBService {
     //
     // Fetch Crew & Cast from A specific movieId and store in DB
 
-    public CompletableFuture<MovieCreditsTMDBDTO> getCreditsByMovieId(Long movieId) {
+    public CompletableFuture<MovieCreditsTMDBDTO> getCreditsByMovieId(Integer movieId) {
 
         // Pre-validation
         if (movieId == null) {

@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class MovieInfoTMDBDTO {
 
     // Attributes
-    private Long id;
+    private Integer id;
     private String title;
     @JsonProperty("original_title")
     private String originalTitle;

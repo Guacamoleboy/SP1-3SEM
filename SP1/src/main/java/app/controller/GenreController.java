@@ -17,13 +17,8 @@ public class GenreController {
     // __________________________________________________________
 
     public GenreController(EntityManager em) {
-        // Internal service
         this.genreService = new GenreService(em);
-
-        // External service
         this.genreTMDBService = new GenreTMDBService();
-
-        // Sync / Cache
         this.genreSyncService = new GenreSyncService(this.genreService);
     }
 
@@ -36,13 +31,13 @@ public class GenreController {
 
     // __________________________________________________________
 
-    public Map<Long, Genre> getAllGenres() {
+    public Map<Integer, Genre> getAllGenres() {
         return genreSyncService.getAllGenres();
     }
 
     // __________________________________________________________
 
-    public Genre getGenreById(Long id) {
+    public Genre getGenreById(Integer id) {
         return genreSyncService.getById(id);
     }
 

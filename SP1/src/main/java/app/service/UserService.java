@@ -35,7 +35,7 @@ public class UserService extends EntityManagerService<User> {
     public void createFromDTO(UserDTO userDTO) {
 
         // Role Setup
-        Role role = roleDAO.findEntityByColumn(UUID.fromString(userDTO.getRoleId()), "id");
+        Role role = roleDAO.findEntityByColumn(userDTO.getRoleId(), "id");
 
         // User Setup
         User user = new User();
@@ -43,12 +43,6 @@ public class UserService extends EntityManagerService<User> {
         user.setEmailHash(hash(userDTO.getEmail()));
         user.setPasswordHash(hash(userDTO.getPassword()));
         user.setRole(role);
-
-        // if company found -> setCompany(). Else "null".
-        if (userDTO.getCompanyId() != null) {
-            Company company = companyDAO.findEntityByColumn(Long.valueOf(userDTO.getCompanyId()), "id");
-            user.setCompany(company);
-        }
 
         // Create
         userDAO.create(user);

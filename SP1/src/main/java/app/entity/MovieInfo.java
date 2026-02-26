@@ -50,14 +50,15 @@ public class MovieInfo {
     @Column(name = "budget")
     private Integer budget;
 
-    @Column(name = "tmdb_id", unique = true, nullable = false)
-    private Long tmdbId;
+    @Column(name = "imdb_id", unique = true)
+    private String imdbId;
 
     @Column(name = "run_time")
     private Integer runTime;
 
+    // NEW TABLES FROM DATA
     @ManyToMany
-    @JoinTable(name = "movie_info_crews",                                                         // New movie table
+    @JoinTable(name = "movie_info_crews",
             joinColumns = @JoinColumn(name = "movie_info_id", referencedColumnName = "id"),       // Here
             inverseJoinColumns = @JoinColumn(name = "crew_id", referencedColumnName = "id")       // There
     )
