@@ -15,31 +15,46 @@ import java.util.List;
 @Table(name="collections")
 public class Collection {
 
-    // Object or null. Not boolean as we first thought!
-    // UUID removed and swapped for Long (return from API).
+    // _____________________________________________________________________________________________
+    //
+    //  • Many (Collection) Many (Genre)
+    //      - Bidirectional
+    //      - Collection knows Genre. Genre knows Collection.
+    //
+    //  • One (Collection) Many (Movie)
+    //      - Bidirectional
+    //      - Collection knows Movie. Movie knows Collection.
+    //      - Mapped relation. Not a column in Collection.
+    //
+    // _____________________________________________________________________________________________
 
-    // Attributes
+    // Columns
     @Id
     @Column(name = "id", unique = true, nullable = false)
     private Integer id;
-
-    @ManyToMany
-    @JoinTable(name = "collection_genres",                                     // Creating new DB Table
-            joinColumns = @JoinColumn(name = "collection_id"),                 // Here
-            inverseJoinColumns = @JoinColumn(name = "genre_id")                // There
-    )
-    private List<Genre> genres;
-
     @Column(name = "poster_path")
     private String posterPath;
-
     @Column(name = "backdrop_path")
     private String backdropPath;
-
     @Column(name = "name", unique = true)
     private String name;
 
+    // _____________________________________________________________________________________________
+    // • Joint Tables (PK on PK)
+    //      - Here
+    //      - There
+
+    @ManyToMany
+    @JoinTable(name = "collection_genres",
+    joinColumns = @JoinColumn(name = "collection_id"),
+    inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    private List<Genre> genres;
+
+    // _____________________________________________________________________________________________
+
     @OneToMany(mappedBy = "collection")
     private List<Movie> movies;
+
+    // _____________________________________________________________________________________________
 
 }

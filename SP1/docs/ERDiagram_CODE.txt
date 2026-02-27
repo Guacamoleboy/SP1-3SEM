@@ -108,10 +108,14 @@ Table crews {
   movie_id int [not null]
 }
 
+/* ###################################################### */
+/*            Joint Tables from JPA Entities              */
+/*               Indexes -> PK Relation                   */
+/* ###################################################### */
+
 Table collection_genres {
   collection_id int [not null]
   genre_id int [not null]
-
   Indexes {
     (collection_id, genre_id) [pk]
   }
@@ -120,7 +124,6 @@ Table collection_genres {
 Table movies_genres {
   movie_id int [not null]
   genre_id int [not null]
-
   Indexes {
     (movie_id, genre_id) [pk]
   }
@@ -128,8 +131,7 @@ Table movies_genres {
 
 Table movies_companies {
   movie_id int [not null]
-  company_id int [not null]
-
+  company_id int [not null]  
   Indexes {
     (movie_id, company_id) [pk]
   }
@@ -138,7 +140,6 @@ Table movies_companies {
 Table movie_info_crews {
   movie_info_id uuid [not null]
   crew_id int [not null]
-
   Indexes {
     (movie_info_id, crew_id) [pk]
   }
@@ -147,7 +148,6 @@ Table movie_info_crews {
 Table movie_info_casts {
   movie_info_id uuid [not null]
   cast_id int [not null]
-
   Indexes {
     (movie_info_id, cast_id) [pk]
   }
