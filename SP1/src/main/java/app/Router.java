@@ -83,6 +83,12 @@ public class Router {
                 movieController.searchMoviesByTitle(term);
             }
 
+            // FOB [7]
+            movieController.getTop10("asc");
+            movieController.getTop10("desc");
+            movieController.mostPopular(10);
+            movieController.mostPopular(20);
+
         }
 
     }

@@ -1,12 +1,9 @@
 package app.service;
 
 import app.dao.MovieDAO;
-import app.dto.external.MovieCreditsTMDBDTO;
 import app.dto.external.MoviePageTMDBDTO;
 import app.dto.external.MovieTMDBDTO;
-import app.entity.Cast;
 import app.entity.Company;
-import app.entity.Crew;
 import app.entity.Movie;
 import app.enums.CreditTitleEnum;
 import app.enums.LanguageEnum;
@@ -39,17 +36,62 @@ public class MovieService extends EntityManagerService<Movie> {
     }
 
     // _________________________________________________________________________________________________________
+    // 2 votes minimum else it's not an average.
 
     public Map<String, Double> getMovieRatingAndTitle(){
-        // Save title + Average Vote for each movie
         Map<String, Double> ratingValues = new HashMap<>();
-        // For-each loop over movieList
         for (Movie movie : movieList) {
-            if (movie.getRating() != null && movie.getMovieInfo() != null) {
+            if (movie.getRating() != null
+                    && movie.getMovieInfo() != null
+                    && movie.getRating().getVoteCount() != null
+                    && movie.getRating().getVoteCount() > 1) {
                 ratingValues.put(movie.getMovieInfo().getTitle(), movie.getRating().getVoteAverage());
             }
         }
         return ratingValues;
+    }
+
+    // _________________________________________________________________________________________________________
+
+    public void mostPopular(int size) {
+
+        // Lambda sort on HashMap - (movieList)
+        List<Movie> topList = movieList.stream()
+                .filter(movie -> movie.getRating() != null && movie.getRating().getVoteCount() != null)
+                .sorted((a, b) -> b.getRating().getVoteCount() - a.getRating().getVoteCount())
+                .limit(size)
+                .toList();
+
+        // Top 10
+        System.out.println("\nTop " + size + " by number of votes:");
+        int rank = 1;
+        for (Movie movie : topList) {
+            System.out.println(rank + " | " + movie.getMovieInfo().getTitle() + " | Votes: " + movie.getRating().getVoteCount());
+            rank++;
+        }
+
+    }
+
+    // _________________________________________________________________________________________________________
+
+    public void getTop10(String sortType) {
+        Map<String, Double> sorted = sort(sortType);
+        if (sorted == null || sorted.isEmpty()) {
+            System.out.println("No movies available.");
+            return;
+        }
+
+        System.out.println("\nTop 10 | " + sortType + " |");
+        int count = 0;
+
+        for (String title : sorted.keySet()) {
+            Double rating = sorted.get(title);
+            System.out.println(title + " | Rating: " + rating);
+            count++;
+            if (count == 10) {
+                break;
+            }
+        }
     }
 
     // _________________________________________________________________________________________________________
@@ -284,5 +326,6 @@ public class MovieService extends EntityManagerService<Movie> {
         return movieDAO.getAllDanishMovies(LanguageEnum.DENMARK.getIso639());
     }
 
+    // _________________________________________________________________________________________________________
 
 }
