@@ -23,6 +23,13 @@ public class CastService extends EntityManagerService<Cast> {
 
     public void saveCastsForMovie(List<CastTMDBDTO> castDTOs, Movie movie) {
         if (castDTOs == null || movie == null) return;
+
+        if (movie.getMovieInfo() != null && movie.getMovieInfo().getCasts() != null
+                && !movie.getMovieInfo().getCasts().isEmpty()) {
+            System.out.println("Casts already loaded for movie: " + movie.getMovieInfo().getTitle());
+            return;
+        }
+
         for (CastTMDBDTO dto : castDTOs) {
             Cast cast = new Cast(dto, movie);
             castDAO.update(cast);

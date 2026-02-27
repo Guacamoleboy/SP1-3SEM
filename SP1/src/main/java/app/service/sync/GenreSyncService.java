@@ -27,6 +27,7 @@ public class GenreSyncService {
             List<Genre> dbGenres = genreService.getAll();
             for (Genre genre : dbGenres) {
                 genreCache.put(genre.getId(), genre);
+                System.out.println("Genre loaded into Cache: " + genre.getGenreName() + " ID: " + genre.getId());
             }
             System.out.println("\nNo genres found in Cache...\nGenres loaded into cache from DB. Cache full now!");
         }

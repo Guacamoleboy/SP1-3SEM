@@ -68,6 +68,12 @@ public class MovieController {
 
     // _______________________________________________
 
+    public List<Movie> getMoviesByGenre(Integer genreId) {
+        return movieService.getMoviesByGenre(genreId);
+    }
+
+    // _______________________________________________
+
     public Movie getMovieById(Integer id){
         return movieService.getMovieById(id);
     }
