@@ -1,0 +1,212 @@
+/* 
+
+  Author: Jonas Meinert Larsen / Guacamoleboy / Cph-jl325
+  Last edited: 27/02-2026
+
+  ______________________
+
+  JPA Relations / ER Diagram
+  Follows 3NF.
+
+*/
+
+/* ###################################################### */
+/*                Tables from JPA Entities                */
+/* ###################################################### */
+
+Table users {
+  id uuid [pk]
+  username varchar [not null, unique]
+  role_id uuid [not null]
+  email_hash varchar [not null, unique]
+  password_hash varchar [not null]
+  created_at timestamp [not null]
+  last_login timestamp [not null]
+}
+
+Table roles {
+  id uuid [pk]
+  role_enum varchar [not null]
+}
+
+Table companies {
+  id int [pk]
+  user_id uuid [unique]
+  logo_path varchar
+  name varchar [unique]
+  description text
+  headquarters varchar
+  homepage varchar
+  parent_company varchar
+  original_country varchar
+  last_uploaded_movie date
+}
+
+Table movies {
+  id int [pk]
+  movie_info_id uuid [not null, unique]
+  collection_id int
+  rating_id uuid [unique]
+}
+
+Table movie_infos {
+  id uuid [pk]
+  adult boolean
+  backdrop_path varchar
+  language_id uuid
+  original_title varchar
+  title varchar
+  overview text
+  release_date date
+  budget int
+  imdb_id varchar [unique]
+  run_time int
+  tagline text
+}
+
+Table ratings {
+  id uuid [pk]
+  vote_average double
+  vote_count int
+}
+
+Table collections {
+  id int [pk]
+  poster_path varchar
+  backdrop_path varchar
+  name varchar [unique]
+}
+
+Table genres {
+  id int [pk]
+  name varchar [unique]
+}
+
+Table languages {
+  id uuid [pk]
+  language_enum varchar [not null]
+}
+
+Table casts {
+  id int [pk]
+  character varchar
+  cast_order int
+  gender int
+  name varchar
+  cast_id int
+  credit_id varchar
+  movie_id int [not null]
+}
+
+Table crews {
+  id int [pk]
+  gender int
+  department varchar
+  job varchar
+  name varchar
+  credit_id varchar
+  movie_id int [not null]
+}
+
+Table collection_genres {
+  collection_id int [not null]
+  genre_id int [not null]
+
+  Indexes {
+    (collection_id, genre_id) [pk]
+  }
+}
+
+Table movies_genres {
+  movie_id int [not null]
+  genre_id int [not null]
+
+  Indexes {
+    (movie_id, genre_id) [pk]
+  }
+}
+
+Table movies_companies {
+  movie_id int [not null]
+  company_id int [not null]
+
+  Indexes {
+    (movie_id, company_id) [pk]
+  }
+}
+
+Table movie_info_crews {
+  movie_info_id uuid [not null]
+  crew_id int [not null]
+
+  Indexes {
+    (movie_info_id, crew_id) [pk]
+  }
+}
+
+Table movie_info_casts {
+  movie_info_id uuid [not null]
+  cast_id int [not null]
+
+  Indexes {
+    (movie_info_id, cast_id) [pk]
+  }
+}
+
+/* ###################################################### */
+/*             Relations Between JPA Entities             */
+/* ###################################################### */
+
+// users -> roles
+Ref: users.role_id > roles.id
+
+// companies -> users
+Ref: companies.user_id - users.id 
+
+// movies -> movie_infos
+Ref: movies.movie_info_id - movie_infos.id
+
+// movies -> collections
+Ref: movies.collection_id > collections.id
+
+// movies -> ratings
+Ref: movies.rating_id - ratings.id
+
+// movie_infos -> languages
+Ref: movie_infos.language_id > languages.id
+
+// casts -> movies
+Ref: casts.movie_id > movies.id
+
+// crews -> movies
+Ref: crews.movie_id > movies.id
+
+// collection_genres -> collections
+Ref: collection_genres.collection_id > collections.id
+
+// colection_genres -> genres
+Ref: collection_genres.genre_id > genres.id
+
+// movies_genres -> movies
+Ref: movies_genres.movie_id > movies.id
+
+// movies_genres -> genres
+Ref: movies_genres.genre_id > genres.id
+
+// movies_companies -> movies
+Ref: movies_companies.movie_id > movies.id
+
+// movies_companies -> companies
+Ref: movies_companies.company_id > companies.id
+
+// movie_info_crews -> movie_infos
+Ref: movie_info_crews.movie_info_id > movie_infos.id
+
+// movie_info_crews -> crew
+Ref: movie_info_crews.crew_id > crews.id
+
+// movie_info_casts -> movie_infos
+Ref: movie_info_casts.movie_info_id > movie_infos.id
+
+// movie_info_casts -> casts
+Ref: movie_info_casts.cast_id > casts.id

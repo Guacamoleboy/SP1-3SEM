@@ -36,7 +36,7 @@ public class Cast {
     private String creditId;
 
     @ManyToOne
-    @JoinColumn(name="movie_id")
+    @JoinColumn(name="movie_id", nullable = false)
     private Movie movie;
 
 }

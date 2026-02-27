@@ -32,7 +32,7 @@ public class Crew {
     @Column(name = "credit_id")
     private String creditId;
     @ManyToOne
-    @JoinColumn(name = "movie_id")
+    @JoinColumn(name="movie_id", nullable = false)
     private Movie movie;
 
 }

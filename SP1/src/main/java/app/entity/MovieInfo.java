@@ -50,6 +50,9 @@ public class MovieInfo {
     @Column(name = "budget")
     private Integer budget;
 
+    @Column(name = "tagline", columnDefinition = "TEXT")
+    private String tagline;
+
     @Column(name = "imdb_id", unique = true)
     private String imdbId;
 
