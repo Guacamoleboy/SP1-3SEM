@@ -15,16 +15,24 @@ import java.util.UUID;
 @Table(name="ratings")
 public class Rating {
 
-    //attributes
+    // _____________________________________________________________________________________________
+    //
+    // • Could be placed in MovieInfo but moved to separate table for clarification
+    //          - "vote_average"
+    //          - "vote_count"
+    //
+    // _____________________________________________________________________________________________
+
+    // Columns
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false, unique = true)
     private UUID id;
-
     @Column(name = "vote_average")
     private Double voteAverage;
-
     @Column(name = "vote_count")
     private Integer voteCount;
+
+    // _____________________________________________________________________________________________
 
 }

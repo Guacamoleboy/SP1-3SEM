@@ -14,13 +14,21 @@ import lombok.NoArgsConstructor;
 @Table(name="crews")
 public class Crew {
 
-    // Crew.. Anything but the actor.
-
-    // Many (Crew) One (Movie)
-    // Not using enum anymore as department does the same from JSON.
-    // Can be used to sort later if needed (enum).
-
-    // 1 -> Female | 2 -> Male
+    // _____________________________________________________________________________________________
+    //
+    // • Remaining crew when Actors are sorted away from MovieCreditsTMDBDTO
+    //
+    // • Many (Crew) One (Movie)
+    //      - Unidirectional
+    //      - Crew knows Movie. Movie doesn't know Crew.
+    //      - FK Column
+    //      - "movie_id" is "movies.id"
+    //
+    // • Gender
+    //      - 1 is Female
+    //      - 2 is Male
+    //
+    // _____________________________________________________________________________________________
 
     @Id
     @Column(name = "id", unique = true, nullable = false)
@@ -34,5 +42,7 @@ public class Crew {
     @ManyToOne
     @JoinColumn(name="movie_id", nullable = false)
     private Movie movie;
+
+    // _____________________________________________________________________________________________
 
 }

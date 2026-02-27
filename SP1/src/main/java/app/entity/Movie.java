@@ -15,20 +15,36 @@ import java.util.List;
 @Table(name="movies")
 public class Movie {
 
-    // Apparently multiple companies own a Movie. Så ManyToMany here.
+    // _____________________________________________________________________________________________
+    //
+    // • Apparently multiple companies own a Movie!
+    //
+    // • Many (Movie) Many (Genre)
+    //          - Bidirectional
+    //          - Movie knows Genre. Genre knows Movie.
+    //
+    // • One (Movie) One (MovieInfo)
+    //          - Unidirectional
+    //          - Movie knows MovieInfo. MovieInfo doesn't know Movie
+    //
+    // • One (Movie) One (Collection)
+    //          - Bidirectional
+    //          - Movie knows Collection. Collection knows Movie.
+    //
+    // • One (Movie) One (Rating)
+    //          - Unidirectional
+    //          - Movie knows Rating. Rating doesn't know Movie.
+    //
+    // • Many (Movie) Many (Company)
+    //          - Bidirectional
+    //          - Movie knows Company. Company knows Movie.
+    //
+    // _____________________________________________________________________________________________
 
-    // Many (Movie) Many (Genre)
-    // One (Movie) One (MovieInfo)
-    // One (Movie) One (Collection)
-    // One (Movie) One (Rating)
-    // Many (Movie) Many (Company)
-
-    // DB COLUMNS
+    // Columns
     @Id
     @Column(name ="id")
     private Integer id;
-
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "movie_info_id", referencedColumnName = "id", nullable = false)
     private MovieInfo movieInfo;
@@ -39,17 +55,23 @@ public class Movie {
     @JoinColumn(name = "rating_id", referencedColumnName = "id")
     private Rating rating;
 
-    // NEW TABLES FROM DATA
+    // _____________________________________________________________________________________________
+    // • Joint Tables (PK on PK)
+    //      - Here
+    //      - There
+
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "movies_genres",
-            joinColumns = @JoinColumn(name = "movie_id"),
-            inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    joinColumns = @JoinColumn(name = "movie_id"),
+    inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private List<Genre> genre;
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "movies_companies",
-        joinColumns = @JoinColumn(name = "movie_id"),
-        inverseJoinColumns = @JoinColumn(name = "company_id"))
+    joinColumns = @JoinColumn(name = "movie_id"),
+    inverseJoinColumns = @JoinColumn(name = "company_id"))
     private List<Company> companies;
+
+    // _____________________________________________________________________________________________
 
 }
