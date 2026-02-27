@@ -86,6 +86,18 @@ public class MovieController {
 
     // _______________________________________________
 
+    public void getTop10(String sortType) {
+        movieService.getTop10(sortType);
+    }
+
+    // _______________________________________________
+
+    public void mostPopular(int size){
+        movieService.mostPopular(size);
+    }
+
+    // _______________________________________________
+
     public List<Movie> getMoviesByActor(Integer actorId) {
         return movieService.sortMoviesByActor(actorId);
     }
