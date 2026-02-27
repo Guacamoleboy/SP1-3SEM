@@ -1,5 +1,6 @@
 package app.entity;
 
+import app.dto.external.CrewTMDBDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,6 +43,21 @@ public class Crew {
     @ManyToOne
     @JoinColumn(name="movie_id", nullable = false)
     private Movie movie;
+
+    // _____________________________________________________________________________________________
+
+    public Crew(CrewTMDBDTO dto, Movie movie) {
+        if(dto == null || movie == null) {
+            throw new IllegalArgumentException("DTO and Movie cannot be null");
+        }
+        this.id = dto.getId();
+        this.name = dto.getName();
+        this.department = dto.getDepartment();
+        this.job = dto.getJob();
+        this.gender = dto.getGender();
+        this.creditId = dto.getCreditId();
+        this.movie = movie;
+    }
 
     // _____________________________________________________________________________________________
 

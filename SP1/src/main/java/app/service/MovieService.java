@@ -234,6 +234,12 @@ public class MovieService extends EntityManagerService<Movie> {
 
     // _________________________________________________________________________________________________________
 
+    public Movie getMovieById(Integer id) {
+        return movieDAO.getById(id);
+    }
+
+    // _________________________________________________________________________________________________________
+
     public List<Movie> getAllDanishMovies(){
         return movieDAO.getAllDanishMovies(LanguageEnum.DENMARK.getIso639());
     }

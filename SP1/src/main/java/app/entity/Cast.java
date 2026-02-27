@@ -1,5 +1,6 @@
 package app.entity;
 
+import app.dto.external.CastTMDBDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,6 +46,22 @@ public class Cast {
     @ManyToOne
     @JoinColumn(name="movie_id", nullable = false)
     private Movie movie;
+
+    // _____________________________________________________________________________________________
+
+    public Cast(CastTMDBDTO dto, Movie movie) {
+        if(dto == null || movie == null) {
+            throw new IllegalArgumentException("DTO and Movie cannot be null");
+        }
+        this.id = dto.getId();
+        this.name = dto.getName();
+        this.character = dto.getCharacter();
+        this.order = dto.getOrder();
+        this.gender = dto.getGender();
+        this.castId = dto.getCastId();
+        this.creditId = dto.getCreditId();
+        this.movie = movie;
+    }
 
     // _____________________________________________________________________________________________
 

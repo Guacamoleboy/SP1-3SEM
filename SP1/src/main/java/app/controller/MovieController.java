@@ -68,6 +68,12 @@ public class MovieController {
 
     // _______________________________________________
 
+    public Movie getMovieById(Integer id){
+        return movieService.getMovieById(id);
+    }
+
+    // _______________________________________________
+
     public List<Movie> getMoviesByActor(Integer actorId) {
         return movieService.sortMoviesByActor(actorId);
     }
