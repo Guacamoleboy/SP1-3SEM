@@ -56,6 +56,9 @@ public class Router {
             movieController.getDanishMoviesByRelease(clientReturn);
             // movieController.deleteAllMovies();
 
+            // FOB [2]
+            movieController.getAllMoviesDB();
+
         }
 
     }

@@ -49,6 +49,19 @@ public class MovieController {
 
     // _______________________________________________
 
+    public void getAllMoviesDB() {
+        List<Movie> allMovies = movieService.getAllMoviesFromDB();
+        for (Movie m : allMovies) {
+            if (m.getMovieInfo() == null) {
+                System.out.println("Movie ID " + m.getId() + " has no MovieInfo attached");
+            }  else {
+                System.out.println("Movie from DB: " + m.getMovieInfo().getTitle());
+            }
+        }
+    }
+
+    // _______________________________________________
+
     public Map<String, Double> getMoviesSortedByRating(String direction) {
         return movieService.sort(direction);
     }
