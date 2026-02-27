@@ -2,11 +2,14 @@ package app.controller;
 
 import app.dto.request.UserDTO;
 import app.entity.Role;
+import app.entity.User;
 import app.enums.RoleEnum;
 import app.service.RoleService;
 import app.service.UserService;
 import jakarta.persistence.EntityManager;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class UserController {
@@ -32,6 +35,7 @@ public class UserController {
 
     public void placeholderUsers() {
         Role companyRole = roleService.findRoleByName(RoleEnum.COMPANY);
+
         // User 1
         UserDTO user1 = new UserDTO();
         user1.setUsername("JonasLarsen");
@@ -46,9 +50,21 @@ public class UserController {
         user2.setPassword("Password123!");
         user2.setRoleId(companyRole.getId());
 
+        List<UserDTO> users = new ArrayList<>();
+
+        users.add(user1);
+        users.add(user2);
+
         // Persist
-        createFromDTO(user1);
-        createFromDTO(user2);
+        for (UserDTO userDTO : users){
+            User existCheck = userService.findEntityByColumn(userDTO.getUsername(), "username");
+            if (existCheck != null){
+                System.out.println("User already found.. Skipping.");
+            } else {
+                createFromDTO(userDTO);
+                System.out.println("User created: " + userDTO.getUsername());
+            }
+        }
     }
 
 }

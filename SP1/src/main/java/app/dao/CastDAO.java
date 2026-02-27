@@ -1,16 +1,16 @@
 package app.dao;
 
-import app.entity.Tagline;
+import app.entity.Cast;
 import jakarta.persistence.EntityManager;
 
-public class TaglineDAO extends EntityManagerDAO<Tagline> {
+public class CastDAO extends EntityManagerDAO<Cast> {
 
     // Attributes
 
     // _______________________________________________________________
 
-    public TaglineDAO(EntityManager em) {
-        super(em, Tagline.class);
+    public CastDAO(EntityManager em) {
+        super(em, Cast.class);
     }
 
     // _______________________________________________________________

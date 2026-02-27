@@ -49,8 +49,51 @@ public class MovieController {
 
     // _______________________________________________
 
+    public void getAllMoviesDB() {
+        List<Movie> allMovies = movieService.getAllMoviesFromDB();
+        for (Movie m : allMovies) {
+            if (m.getMovieInfo() == null) {
+                System.out.println("Movie ID " + m.getId() + " has no MovieInfo attached");
+            }  else {
+                System.out.println("Movie from DB: " + m.getMovieInfo().getTitle());
+            }
+        }
+    }
+
+    // _______________________________________________
+
+    public List<Movie> searchMoviesByTitle(String title) {
+        return movieService.searchMoviesByTitle(title);
+    }
+
+    // _______________________________________________
+
     public Map<String, Double> getMoviesSortedByRating(String direction) {
         return movieService.sort(direction);
+    }
+
+    // _______________________________________________
+
+    public List<Movie> getMoviesByGenre(Integer genreId) {
+        return movieService.getMoviesByGenre(genreId);
+    }
+
+    // _______________________________________________
+
+    public Movie getMovieById(Integer id){
+        return movieService.getMovieById(id);
+    }
+
+    // _______________________________________________
+
+    public void getTop10(String sortType) {
+        movieService.getTop10(sortType);
+    }
+
+    // _______________________________________________
+
+    public void mostPopular(int size){
+        movieService.mostPopular(size);
     }
 
     // _______________________________________________

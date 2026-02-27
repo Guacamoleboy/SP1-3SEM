@@ -1,5 +1,6 @@
 package app.entity;
 
+import app.dto.external.CrewTMDBDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,13 +15,21 @@ import lombok.NoArgsConstructor;
 @Table(name="crews")
 public class Crew {
 
-    // Crew.. Anything but the actor.
-
-    // Many (Crew) One (Movie)
-    // Not using enum anymore as department does the same from JSON.
-    // Can be used to sort later if needed (enum).
-
-    // 1 -> Female | 2 -> Male
+    // _____________________________________________________________________________________________
+    //
+    // • Remaining crew when Actors are sorted away from MovieCreditsTMDBDTO
+    //
+    // • Many (Crew) One (Movie)
+    //      - Unidirectional
+    //      - Crew knows Movie. Movie doesn't know Crew.
+    //      - FK Column
+    //      - "movie_id" is "movies.id"
+    //
+    // • Gender
+    //      - 1 is Female
+    //      - 2 is Male
+    //
+    // _____________________________________________________________________________________________
 
     @Id
     @Column(name = "id", unique = true, nullable = false)
@@ -32,7 +41,24 @@ public class Crew {
     @Column(name = "credit_id")
     private String creditId;
     @ManyToOne
-    @JoinColumn(name = "movie_id")
+    @JoinColumn(name="movie_id", nullable = false)
     private Movie movie;
+
+    // _____________________________________________________________________________________________
+
+    public Crew(CrewTMDBDTO dto, Movie movie) {
+        if(dto == null || movie == null) {
+            throw new IllegalArgumentException("DTO and Movie cannot be null");
+        }
+        this.id = dto.getId();
+        this.name = dto.getName();
+        this.department = dto.getDepartment();
+        this.job = dto.getJob();
+        this.gender = dto.getGender();
+        this.creditId = dto.getCreditId();
+        this.movie = movie;
+    }
+
+    // _____________________________________________________________________________________________
 
 }

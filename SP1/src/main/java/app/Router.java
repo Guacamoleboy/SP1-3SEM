@@ -7,6 +7,8 @@ import app.config.HibernateConfig;
 import app.controller.UserController;
 import app.entity.Company;
 import app.entity.Genre;
+import app.entity.Movie;
+import app.service.CreditService;
 import app.util.PopulateDB;
 import jakarta.persistence.EntityManager;
 
@@ -55,6 +57,37 @@ public class Router {
             Integer clientReturn = 5;
             movieController.getDanishMoviesByRelease(clientReturn);
             // movieController.deleteAllMovies();
+
+            // FOB [2]
+            movieController.getAllMoviesDB();
+
+            // FOB [3]
+            // Could be refactored to using IDs from DB movies, but done like this for now.
+            Movie movieCreditMovie1 = movieController.getMovieById(980026);
+            Movie movieCreditMovie2 = movieController.getMovieById(1541356);
+            CreditService creditService = new CreditService(em);
+            creditService.saveMovieCredits(movieCreditMovie1);
+            creditService.saveMovieCredits(movieCreditMovie2);
+
+            // FOB [4]
+            Integer genreIdAction = 28;
+            Integer genreIdComedy = 35;
+            movieController.getMoviesByGenre(genreIdAction);
+            movieController.getMoviesByGenre(genreIdComedy);
+
+            // FOB [5]
+            // Already done. Use EntityManagerDAO and create() method on a Movie movie.
+
+            // FOB [6]
+            for (String term : new String[] { "salmon", "MANGO", "Mr. Nob", "Mr. Nobody Against PUTIN", "ab" }) {
+                movieController.searchMoviesByTitle(term);
+            }
+
+            // FOB [7]
+            movieController.getTop10("asc");
+            movieController.getTop10("desc");
+            movieController.mostPopular(10);
+            movieController.mostPopular(20);
 
         }
 

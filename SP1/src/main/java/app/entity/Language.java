@@ -16,20 +16,22 @@ import java.util.UUID;
 @Table(name="languages")
 public class Language {
 
-    // LanguageEnum is the Object of the Enum class, so you can use the getCountryCode() if you
-    // need it for something!
-    // ________________________
-    // Usage:
-    // name() & getCountryCode()
+    // _____________________________________________________________________________________________
+    //
+    // • LanguageEnum languageEnum
+    //          - takes the first String in the enum
+    //
+    // _____________________________________________________________________________________________
 
-    // Attributes
+    // Columns
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", columnDefinition = "uuid", unique = true, nullable = false)
     private UUID id;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "language_enum", nullable = false)
     private LanguageEnum languageEnum;
+
+    // _____________________________________________________________________________________________
 
 }

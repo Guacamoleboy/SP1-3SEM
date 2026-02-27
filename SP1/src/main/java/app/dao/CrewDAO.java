@@ -15,5 +15,4 @@ public class CrewDAO extends EntityManagerDAO<Crew> {
 
     // _______________________________________________________________
 
-
 }
