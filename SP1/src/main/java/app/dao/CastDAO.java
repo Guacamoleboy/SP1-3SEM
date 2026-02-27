@@ -1,18 +1,19 @@
 package app.dao;
 
-import app.entity.Crew;
+import app.entity.Cast;
 import jakarta.persistence.EntityManager;
 
-public class CrewDAO extends EntityManagerDAO<Crew> {
+public class CastDAO extends EntityManagerDAO<Cast> {
 
     // Attributes
 
     // _______________________________________________________________
 
-    public CrewDAO(EntityManager em) {
-        super(em, Crew.class);
+    public CastDAO(EntityManager em) {
+        super(em, Cast.class);
     }
 
     // _______________________________________________________________
+
 
 }

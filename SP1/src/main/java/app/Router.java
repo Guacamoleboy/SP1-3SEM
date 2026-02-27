@@ -7,6 +7,8 @@ import app.config.HibernateConfig;
 import app.controller.UserController;
 import app.entity.Company;
 import app.entity.Genre;
+import app.entity.Movie;
+import app.service.CreditService;
 import app.util.PopulateDB;
 import jakarta.persistence.EntityManager;
 
@@ -58,6 +60,13 @@ public class Router {
 
             // FOB [2]
             movieController.getAllMoviesDB();
+
+            // FOB [3]
+            Movie movieCreditMovie1 = movieController.getMovieById(980026);
+            Movie movieCreditMovie2 = movieController.getMovieById(1541356);
+            CreditService creditService = new CreditService(em);
+            creditService.saveMovieCredits(movieCreditMovie1);
+            creditService.saveMovieCredits(movieCreditMovie2);
 
         }
 
