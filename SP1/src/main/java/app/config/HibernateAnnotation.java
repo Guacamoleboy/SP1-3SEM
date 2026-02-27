@@ -20,7 +20,6 @@ public class HibernateAnnotation {
         configuration.addAnnotatedClass(MovieInfo.class);
         configuration.addAnnotatedClass(Rating.class);
         configuration.addAnnotatedClass(Role.class);
-        configuration.addAnnotatedClass(Tagline.class);
         configuration.addAnnotatedClass(User.class);
     }
 
