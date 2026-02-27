@@ -62,11 +62,24 @@ public class Router {
             movieController.getAllMoviesDB();
 
             // FOB [3]
+            // Could be refactored to using IDs from DB movies, but done like this for now.
             Movie movieCreditMovie1 = movieController.getMovieById(980026);
             Movie movieCreditMovie2 = movieController.getMovieById(1541356);
             CreditService creditService = new CreditService(em);
             creditService.saveMovieCredits(movieCreditMovie1);
             creditService.saveMovieCredits(movieCreditMovie2);
+
+            // FOB [4]
+            Integer genreIdAction = 28;
+            Integer genreIdComedy = 35;
+            movieController.getMoviesByGenre(genreIdAction);
+            movieController.getMoviesByGenre(genreIdComedy);
+
+            // FOB [5]
+            // Already done. Use EntityManagerDAO and create() method on a Movie movie.
+
+
+
 
         }
 

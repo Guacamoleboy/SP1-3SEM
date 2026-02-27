@@ -240,6 +240,26 @@ public class MovieService extends EntityManagerService<Movie> {
 
     // _________________________________________________________________________________________________________
 
+    public List<Movie> getMoviesByGenre(Integer genreId) {
+        validateNotEmpty(genreId, "genre_id");
+        List<Movie> movies = movieDAO.getMoviesByGenreId(genreId);
+        System.out.println("\nMovies for genre ID " + genreId);
+        if (movies.isEmpty()) {
+            System.out.println("No movies found for this genre");
+        } else {
+            for (Movie movie : movies) {
+                if (movie.getMovieInfo() != null) {
+                    System.out.println(movie.getMovieInfo().getTitle());
+                } else {
+                    System.out.println("- MovieInfo not available");
+                }
+            }
+        }
+        return movies;
+    }
+
+    // _________________________________________________________________________________________________________
+
     public List<Movie> getAllDanishMovies(){
         return movieDAO.getAllDanishMovies(LanguageEnum.DENMARK.getIso639());
     }

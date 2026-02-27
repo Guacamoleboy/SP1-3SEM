@@ -23,6 +23,13 @@ public class CrewService extends EntityManagerService<Crew> {
 
     public void saveCrewsForMovie(List<CrewTMDBDTO> crewDTOs, Movie movie) {
         if (crewDTOs == null || movie == null) return;
+
+        if (movie.getMovieInfo() != null && movie.getMovieInfo().getCrews() != null
+                && !movie.getMovieInfo().getCrews().isEmpty()) {
+            System.out.println("Crews already loaded for movie: " + movie.getMovieInfo().getTitle());
+            return;
+        }
+
         for (CrewTMDBDTO dto : crewDTOs) {
             Crew crew = new Crew(dto, movie);
             crewDAO.update(crew);
