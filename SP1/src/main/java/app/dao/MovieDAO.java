@@ -19,9 +19,23 @@ public class MovieDAO extends EntityManagerDAO<Movie> {
     // _______________________________________________________________
 
     public List<Movie> searchMoviesByTitleContainsIgnoreCase(String title) {
-        return em.createQuery("SELECT m FROM Movie m " + "WHERE LOWER(m.movieInfo.title) LIKE LOWER(CONCAT('%', :title, '%'))", Movie.class)
-                .setParameter("title", title)
+        String trimmedTitle = title.trim();
+        String JPQLContains = "SELECT x FROM Movie x WHERE LOWER(x.movieInfo.title) LIKE LOWER(CONCAT('%', :title, '%'))";
+        String JPQLFull = "SELECT x FROM Movie x WHERE x.movieInfo.title = :title";
+
+        // Full Title First
+        List<Movie> results = em.createQuery(JPQLFull, Movie.class)
+                .setParameter("title", trimmedTitle)
                 .getResultList();
+
+        // Contains after
+        if (results.isEmpty()) {
+            results = em.createQuery(JPQLContains, Movie.class)
+                    .setParameter("title", trimmedTitle)
+                    .getResultList();
+        }
+
+        return results;
     }
 
     // _______________________________________________________________

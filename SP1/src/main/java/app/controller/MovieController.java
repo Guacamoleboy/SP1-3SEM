@@ -62,6 +62,12 @@ public class MovieController {
 
     // _______________________________________________
 
+    public List<Movie> searchMoviesByTitle(String title) {
+        return movieService.searchMoviesByTitle(title);
+    }
+
+    // _______________________________________________
+
     public Map<String, Double> getMoviesSortedByRating(String direction) {
         return movieService.sort(direction);
     }

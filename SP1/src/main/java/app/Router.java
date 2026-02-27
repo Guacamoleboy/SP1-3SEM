@@ -78,8 +78,10 @@ public class Router {
             // FOB [5]
             // Already done. Use EntityManagerDAO and create() method on a Movie movie.
 
-
-
+            // FOB [6]
+            for (String term : new String[] { "salmon", "MANGO", "Mr. Nob", "Mr. Nobody Against PUTIN", "ab" }) {
+                movieController.searchMoviesByTitle(term);
+            }
 
         }
 
