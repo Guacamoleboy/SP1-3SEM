@@ -240,6 +240,26 @@ public class MovieService extends EntityManagerService<Movie> {
 
     // _________________________________________________________________________________________________________
 
+    public List<Movie> searchMoviesByTitle(String title) {
+        validateNotEmpty(title, "title");
+        List<Movie> movies = movieDAO.searchMoviesByTitleContainsIgnoreCase(title);
+        System.out.println("\nSearch results for title containing: " + title);
+        if (movies.isEmpty()) {
+            System.out.println("No movies found.");
+        } else {
+            for (Movie movie : movies) {
+                if (movie.getMovieInfo() != null) {
+                    System.out.println(movie.getMovieInfo().getTitle());
+                } else {
+                    System.out.println("MovieInfo not available");
+                }
+            }
+        }
+        return movies;
+    }
+
+    // _________________________________________________________________________________________________________
+
     public List<Movie> getMoviesByGenre(Integer genreId) {
         validateNotEmpty(genreId, "genre_id");
         List<Movie> movies = movieDAO.getMoviesByGenreId(genreId);
