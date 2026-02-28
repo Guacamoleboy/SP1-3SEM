@@ -4,6 +4,8 @@
 **School Project**
 
 [![TMDB Reference Docs](https://img.shields.io/badge/Go%20to%20TMDB%20Docs-ffffff?style=for-the-badge&color=33B6DF)](http://developer.themoviedb.org/reference/getting-started)
+[![ER Diagram](https://img.shields.io/badge/View%20ER%20Diagram-ffffff?style=for-the-badge&color=DDDDDD)](https://dbdocs.io/cph-jl325/SP1-3-Semester?view=relationships)
+[![Our FigJam](https://img.shields.io/badge/Show%20FigJam-ffffff?style=for-the-badge&color=DDDDDD)](https://www.figma.com/board/NZmhx8sTNX1Kley1DbmgN2/SP1?node-id=0-1&t=8fzkf3eLJk28Ffqz-1)
 
 </div>
 
@@ -44,6 +46,48 @@ We must build a part of a small **backend**, that can store and retrieve informa
 * **Different Skill Levels:** Trying to keep the project as simple as possible to acount for different skill levels
 * **PR Requests:** Solved Issues from our KanBan should be implemented using Pull Requests from Personal Branch to dev.
 * **KanBan:** Used to keep track of tasks and who's doing what at any time of the day. 
+
+---
+
+### Getting started..
+
+Clone the project to your local PC
+
+**HTTPS**
+```bash
+git clone https://github.com/Guacamoleboy/SP1-3SEM.git
+```
+
+**SSH**
+```bash
+git clone git@github.com:Guacamoleboy/SP1-3SEM.git
+```
+
+**GitHub CLI**
+```bash
+gh repo clone Guacamoleboy/SP1-3SEM
+```
+
+Locate the `resources/` folder and add the following files:
+
+- `.env`
+- `config.properties`
+
+Add to `.env`:
+
+```env
+TMDB_API=YOUR_API_KEY
+```
+
+Add to `config.properties`:
+
+```properties
+DB_NAME=
+DB_USERNAME=
+DB_PASSWORD=
+```
+
+You're all set! Enjoy.
 
 ---
 
