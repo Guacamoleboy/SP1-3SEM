@@ -19,80 +19,69 @@ public class PopulateDB {
     // _________________________________________________________________
 
     public static void populateRoles() {
-
-        // already populated? runtime check
         if (rolesPopulated) {
-            System.out.println("PopulateDB: Already populated. Skipping step.");
+            System.out.println("PopulateDB Roles: Already populated. Skipping...");
             return;
         }
-
         EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory();
-
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
-
-            RoleDAO roleDAO = new RoleDAO(em);
-
-            // Check if Role is empty. If it's empty -> populate.
-            boolean hasAnyRole = !roleDAO.getAll().isEmpty();
-            if (hasAnyRole) {
-                System.out.println("PopulateDB: Roles already exist in DB. Skipping populate.");
-            } else {
-                for (RoleEnum roleEnum : RoleEnum.values()) {
-                    Role role = new Role();
-                    role.setRoleEnum(roleEnum);
-                    roleDAO.create(role);
-                    System.out.println("Inserted role: " + roleEnum.name());
-                }
-                System.out.println("PopulateDB: Roles inserted successfully.");
-            }
-
+            populateRoles(em);
             em.getTransaction().commit();
             rolesPopulated = true;
-
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error during role population: " + e.getMessage());
         }
+    }
 
+    // _________________________________________________________________
+
+    public static void populateRoles(EntityManager em) {
+        RoleDAO roleDAO = new RoleDAO(em);
+        if (!roleDAO.getAll().isEmpty()) {
+            System.out.println("PopulateDB: Roles already exist in DB. Skipping...");
+            return;
+        }
+        for (RoleEnum roleEnum : RoleEnum.values()) {
+            Role role = new Role();
+            role.setRoleEnum(roleEnum);
+            roleDAO.create(role);
+            System.out.println("Role added: " + roleEnum.name());
+        }
+        System.out.println("PopulateDB: Roles added.");
     }
 
     // _________________________________________________________________
 
     public static void populateLanguages() {
-
         if (languagesPopulated) {
-            System.out.println("PopulateDB: Already populated. Skipping step.");
+            System.out.println("PopulateDB Languages: Already populated. Skipping...");
             return;
         }
-
         EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory();
-
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
-
-            LanguageDAO languageDAO = new LanguageDAO(em);
-
-            boolean hasAnyLanguage = !languageDAO.getAll().isEmpty();
-            if (hasAnyLanguage) {
-                System.out.println("PopulateDB: Languages already exist in DB. Skipping populate.");
-            } else {
-                for (LanguageEnum langEnum : LanguageEnum.values()) {
-                    Language language = new Language();
-                    language.setLanguageEnum(langEnum);
-                    languageDAO.create(language);
-                    System.out.println("Inserted language: " + langEnum.getDisplayName()
-                            + " (" + langEnum.getIso639() + "/" + langEnum.getIso3166() + ")");
-                }
-                System.out.println("PopulateDB: Languages inserted successfully.");
-            }
-
+            populateLanguages(em);
             em.getTransaction().commit();
             languagesPopulated = true;
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+    }
 
+    // _________________________________________________________________
+
+    public static void populateLanguages(EntityManager em) {
+        LanguageDAO languageDAO = new LanguageDAO(em);
+        if (!languageDAO.getAll().isEmpty()) {
+            System.out.println("PopulateDB: Languages already exist. Skipping...");
+            return;
+        }
+        for (LanguageEnum languageEnum : LanguageEnum.values()) {
+            Language language = new Language();
+            language.setLanguageEnum(languageEnum);
+            System.out.println("Language added: "+ languageEnum.getDisplayName());
+            languageDAO.create(language);
+        }
+        System.out.println("PopulateDB: Languages added.");
     }
 
 }

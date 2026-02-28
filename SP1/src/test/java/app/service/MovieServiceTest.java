@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MovieServiceTest {
 
     private static EntityManagerFactory emf;

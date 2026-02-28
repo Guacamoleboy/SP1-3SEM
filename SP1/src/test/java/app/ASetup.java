@@ -6,7 +6,7 @@ import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public abstract class ASETUPTest {
+public abstract class ASetup {
 
     // Attributes
     protected EntityManagerFactory emf;

@@ -1,6 +1,6 @@
 package app.dao;
 
-import app.ASETUPTest;
+import app.ASetup;
 import app.entity.User;
 import app.entity.Role;
 import app.enums.RoleEnum;
@@ -8,7 +8,8 @@ import org.junit.jupiter.api.*;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-class EntityManagerDAOTest extends ASETUPTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class EntityManagerDAOTest extends ASetup {
 
     // Usage reference:
     // https://github.com/Guacamoleboy/3-Semester-Friday/blob/main/backend/src/test/java/dk/project/dao/EntityManagerDAOTest.java
@@ -35,7 +36,6 @@ class EntityManagerDAOTest extends ASETUPTest {
 
     private User createUser() {
         Role role = createRole();
-
         User u = new User();
         u.setUsername("testuser");
         u.setRole(role);
@@ -48,7 +48,6 @@ class EntityManagerDAOTest extends ASETUPTest {
 
     private User createUser2() {
         Role role = createRole();
-
         User u = new User();
         u.setUsername("testuser2");
         u.setRole(role);
@@ -72,10 +71,8 @@ class EntityManagerDAOTest extends ASETUPTest {
     void update() {
         User u = createUser();
         dao.create(u);
-
         u.setUsername("updated");
         User updated = dao.update(u);
-
         assertEquals("updated", updated.getUsername());
     }
 
@@ -84,11 +81,8 @@ class EntityManagerDAOTest extends ASETUPTest {
     @Test
     void delete() {
         User u = createUser();
-
         dao.create(u);
-
         dao.delete(u);
-
         assertNull(dao.getById(u.getId()));
     }
 
@@ -98,9 +92,7 @@ class EntityManagerDAOTest extends ASETUPTest {
     void deleteById() {
         User u = createUser();
         dao.create(u);
-
         dao.deleteById(u.getId());
-
         assertNull(dao.getById(u.getId()));
     }
 
@@ -109,11 +101,8 @@ class EntityManagerDAOTest extends ASETUPTest {
     @Test
     void getById() {
         User u = createUser();
-
         dao.create(u);
-
         User found = dao.getById(u.getId());
-
         assertNotNull(found);
     }
 
@@ -123,9 +112,7 @@ class EntityManagerDAOTest extends ASETUPTest {
     void existByColumn() {
         User u = createUser();
         u.setUsername("exists");
-
         dao.create(u);
-
         assertTrue(dao.existByColumn("exists", "username"));
     }
 
@@ -135,11 +122,8 @@ class EntityManagerDAOTest extends ASETUPTest {
     void findEntityByColumn() {
         User u = createUser();
         u.setUsername("find");
-
         dao.create(u);
-
         User found = dao.findEntityByColumn("find", "username");
-
         assertNotNull(found);
         assertEquals("find", found.getUsername());
     }
@@ -150,9 +134,7 @@ class EntityManagerDAOTest extends ASETUPTest {
     void getAll() {
         dao.create(createUser());
         dao.create(createUser2());
-
         List<User> all = dao.getAll();
-
         assertEquals(2, all.size());
     }
 
@@ -162,9 +144,7 @@ class EntityManagerDAOTest extends ASETUPTest {
     void deleteAll() {
         dao.create(createUser());
         dao.create(createUser2());
-
         dao.deleteAll();
-
         assertEquals(0, dao.getAll().size());
     }
 
@@ -174,11 +154,8 @@ class EntityManagerDAOTest extends ASETUPTest {
     void getColumnById() {
         User u = createUser();
         u.setUsername("column");
-
         dao.create(u);
-
         String name = dao.getColumnById(u.getId(), "username");
-
         assertEquals("column", name);
     }
 
@@ -188,11 +165,8 @@ class EntityManagerDAOTest extends ASETUPTest {
     void updateColumnById() {
         User u = createUser();
         u.setUsername("old");
-
         dao.create(u);
-
         int updated = dao.updateColumnById(u.getId(), "username", "new");
-
         em.clear();
         assertEquals(1, updated);
         assertEquals("new", dao.getById(u.getId()).getUsername());
@@ -213,4 +187,5 @@ class EntityManagerDAOTest extends ASETUPTest {
         dao.executeQuery(() -> {});
         assertTrue(true);
     }
+
 }
