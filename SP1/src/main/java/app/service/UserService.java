@@ -5,11 +5,9 @@ import app.dao.RoleDAO;
 import app.dao.UserDAO;
 import app.dto.request.UserDTO;
 import app.dto.response.UserResponseDTO;
-import app.entity.Company;
 import app.entity.Role;
 import app.entity.User;
 import jakarta.persistence.EntityManager;
-import java.util.UUID;
 import static app.util.BCryptHash.hash;
 
 public class UserService extends EntityManagerService<User> {

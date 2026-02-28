@@ -10,10 +10,6 @@ import java.util.Map;
 
 public class LanguageService extends EntityManagerService<Language> {
 
-    // TODO: Jonas - 24/02-2026
-    // TODO: __________________
-    // TODO: Should DB call be eliminated? We use Cache now. Maybe keep in case memory breaks? Not sure.
-
     // Attributes
     private final LanguageDAO languageDAO;
     private static Map<LanguageEnum, Language> languageEnumCache = new HashMap<>();

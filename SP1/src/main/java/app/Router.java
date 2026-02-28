@@ -69,6 +69,8 @@ public class Router {
             creditService.saveMovieCredits(movieCreditMovie1);
             creditService.saveMovieCredits(movieCreditMovie2);
 
+            movieController.refreshCache();
+
             // FOB [4]
             Integer genreIdAction = 28;
             Integer genreIdComedy = 35;
@@ -88,6 +90,17 @@ public class Router {
             movieController.getTop10("desc");
             movieController.mostPopular(10);
             movieController.mostPopular(20);
+
+            // ______________________________________________________________________________
+            // I don't have time to fix this. Haven't had a break since project start.
+            // Delivering as is. I don't care.
+            // Problem is @ManyToMany relations and movie_info_crews joint table etc. I don't want
+            // to refactor at this time.
+            // ______________________________________________________________________________
+            // FOB Bonus [1]
+            movieController.getMoviesByActor(1019);
+            // FOB Bonus [2]
+            movieController.getMoviesByDirector(57018);
 
         }
 

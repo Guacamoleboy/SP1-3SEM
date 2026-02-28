@@ -98,14 +98,30 @@ public class MovieController {
 
     // _______________________________________________
 
-    public List<Movie> getMoviesByActor(Integer actorId) {
-        return movieService.sortMoviesByActor(actorId);
+    public void refreshCache() {
+        movieService.refreshMovieCache();
     }
 
     // _______________________________________________
 
-    public List<Movie> getMoviesByDirector(Integer directorId) {
-        return movieService.getMoviesByDirector(directorId);
+    public void getMoviesByActor(Integer actorId) {
+        List<Movie> movies = movieService.sortMoviesByActor(actorId);
+        if (movies.isEmpty()) {
+            System.out.println("No movies found for Actor ID: " + actorId);
+        } else {
+            movies.forEach(m -> System.out.println("- " + m.getMovieInfo().getTitle()));
+        }
+    }
+
+    // _______________________________________________
+
+    public void getMoviesByDirector(Integer directorId) {
+        List<Movie> movies = movieService.getMoviesByDirector(directorId);
+        if (movies.isEmpty()) {
+            System.out.println("No movies found for Director ID: " + directorId);
+        } else {
+            movies.forEach(m -> System.out.println("- " + m.getMovieInfo().getTitle()));
+        }
     }
 
 }
