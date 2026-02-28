@@ -16,7 +16,7 @@ gen/
 # -------- Environment Variables -------- #
 .env.*
 .env
-config.properties
+SP1/src/main/resources/config.properties
 
 # -------- DB -------- #
 *.sql

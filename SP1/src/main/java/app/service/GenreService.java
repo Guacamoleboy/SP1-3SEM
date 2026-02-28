@@ -9,12 +9,7 @@ import java.util.List;
 
 public class GenreService extends EntityManagerService<Genre> {
 
-    // TODO: Jonas - 25/02-2026
-    // TODO: _________________
-    // TODO:
-    // TODO: Genre doesn't change often. Should be called once and stored in DB like Role / Language.
-    // TODO: Can be ran when needed to check. Should only populate once - maybe move it to PopulatorDB ?
-
+    // Attributes
     private final GenreDAO genreDAO;
     private final GenreTMDBService genreTMDBService;
 

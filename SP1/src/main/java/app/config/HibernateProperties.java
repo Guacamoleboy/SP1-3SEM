@@ -32,10 +32,10 @@ public class HibernateProperties {
 
     // ________________________________________________________________________
 
-    public static Properties setDevProperties(Properties props) {
-        String DBName = Util.getPropertyValue("DB_NAME", "config.properties");
-        String DB_USERNAME = Util.getPropertyValue("DB_USERNAME", "config.properties");
-        String DB_PASSWORD = Util.getPropertyValue("DB_PASSWORD", "config.properties");
+    public static Properties setDevProperties(Properties props, String resourceName) {
+        String DBName = Util.getPropertyValue("DB_NAME", resourceName);
+        String DB_USERNAME = Util.getPropertyValue("DB_USERNAME", resourceName);
+        String DB_PASSWORD = Util.getPropertyValue("DB_PASSWORD", resourceName);
         props.put("hibernate.connection.url", "jdbc:postgresql://localhost:5432/" + DBName);
         props.put("hibernate.connection.username", DB_USERNAME);
         props.put("hibernate.connection.password", DB_PASSWORD);

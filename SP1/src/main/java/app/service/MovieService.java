@@ -263,7 +263,7 @@ public class MovieService extends EntityManagerService<Movie> {
 
     // _________________________________________________________________________________________________________
 
-    private void refreshMovieCache() {
+    public void refreshMovieCache() {
         this.movieList.clear();
         this.movieList.addAll(movieDAO.getAll());
     }
