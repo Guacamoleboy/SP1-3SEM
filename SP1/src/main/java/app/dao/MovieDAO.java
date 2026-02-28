@@ -1,9 +1,8 @@
 package app.dao;
 
-import app.dto.external.MoviePageTMDBDTO;
 import app.entity.Movie;
+import app.enums.LanguageEnum;
 import jakarta.persistence.EntityManager;
-
 import java.util.List;
 
 public class MovieDAO extends EntityManagerDAO<Movie> {
@@ -54,21 +53,6 @@ public class MovieDAO extends EntityManagerDAO<Movie> {
         return em.createQuery(JPQL, Movie.class)
                 .setParameter("genreId", genreId)
                 .getResultList();
-    }
-
-    // _______________________________________________________________
-
-    public void saveAll(List<Movie> movies) {
-        try {
-            em.getTransaction().begin();
-            for (Movie movie : movies) {
-                em.merge(movie);
-            }
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) em.getTransaction().rollback();
-            throw e;
-        }
     }
 
 }
